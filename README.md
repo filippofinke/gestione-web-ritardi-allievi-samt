@@ -1,3 +1,9 @@
 # Gestione Web Ritardi Allievi SAMT
 
-Prova di funzionamento git come richiesto dal docente Valsangiacomo.
+---
+
+Allievo: Filippo Finke
+Formatore: Fabrizio Valsangiacomo
+Perito: Gianluca Costante
+
+> Progetto d'esame.

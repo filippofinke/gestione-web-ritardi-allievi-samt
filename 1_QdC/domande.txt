@@ -1,0 +1,20 @@
+Come viene eseguito il login? 
+Uguale sia per utenti che amministratori.
+
+La registrazione avviene inserendo il nome, il cognome, l’account email come username sia per utenti che amministratori?
+Si, per entrambi.
+
+Con il sistema del calendario cosa intende?
+Input di tipo date-time.
+
+I ritardi accumulati quindi vanno recuperati anche nel secondo semestre?
+Si.
+
+Per fare in modo che un ritardo sia visibile ma non conteggiato, che cosa intende?
+Il ritardo è stato giustificato, viene mostrato ma non calcolato come recupero.
+
+L'email di notifica avvisa solamente lo studente che deve recuperare un ritardo, giusto?
+Esatto, solamente di notifica.
+
+Su che tipo di hosting “interno” andrà il progetto?
+Sarà su Infomaniak.
