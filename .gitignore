@@ -1,2 +1,5 @@
 # Ignoro i file docx dei diari.
 /4_Diari/docx
+/5_Sito o applicativo/vendor
+/5_Sito o applicativo/composer.lock
+/5_Sito o applicativo/config.php
