@@ -1,0 +1,19 @@
+{
+    "name": "filippo/ritardi-web",
+    "description": "Gestione Web Ritardi Allievi SAMT",
+    "authors": [
+        {
+            "name": "Filippo Finke",
+            "email": "filippo.finke@samtrevano.ch"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "FilippoFinke\\":"src/"
+        }
+    },
+    "require": {
+        "filippofinke/php-rest": "dev-master"
+    }
+}
