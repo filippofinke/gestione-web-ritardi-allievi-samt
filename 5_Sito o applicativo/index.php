@@ -1,13 +1,20 @@
 <?php
+
 use FilippoFinke\Router;
 use FilippoFinke\Response;
 use FilippoFinke\Request;
+use FilippoFinke\RouteGroup;
 use FilippoFinke\Utils\Database;
+use FilippoFinke\Middlewares\AdminRequired;
+use FilippoFinke\Middlewares\AuthRequired;
 
+// Includo le librerie attraverso l'autoload generato da composer.
 require __DIR__ . '/vendor/autoload.php';
 
+// Avvio della sessione per determinare lo stato dell'utente corrente.
 session_start();
 
+// Controllo per file statici, solamente se si usa il web server di PHP.
 if (php_sapi_name() == 'cli-server') {
     $path = $_SERVER["REQUEST_URI"];
     if (strpos($path, '/assets/') !== false) {
@@ -15,7 +22,7 @@ if (php_sapi_name() == 'cli-server') {
     }
 }
 
-// Controllo del file di configurazione.
+// Controllo l'esistenza del file di configurazione.
 if (!file_exists("config.php")) {
     $response = new Response();
     $info = array(
@@ -50,13 +57,34 @@ try {
     exit;
 }
 
-
+// Creao un nuovo oggetto router che si occuperà di smistare le richieste.
 $router = new Router();
 
+// Imposto una funzione di default da chiamare in caso la pagina richiesta non esista.
 $router->setNotFound(function (Request $req, Response $res) {
     return $res->redirect("/");
 });
 
-$router->get("/", "FilippoFinke\Controllers\Test::index");
+// Percorso pagina di accesso.
+$router->get("/login", "FilippoFinke\Controllers\Auth::login");
+// Percorso pagina di recupero password.
+$router->get("/forgot-password", "FilippoFinke\Controllers\Auth::forgotPassword");
 
+// Percorso per eseguire il login.
+$router->post("/login", "FilippoFinke\Controllers\Auth::doLogin");
+// Percorso per eseguire la disconnessione.
+$router->get("/logout", "FilippoFinke\Controllers\Auth::doLogout");
+
+// Gruppo di percorsi dove è richiesto solamente l'accesso.
+$homeRoutes = new RouteGroup();
+$homeRoutes->add(
+    // Percorso pagina principale.
+    $router->get("/", function($req, $res) {
+        return $res->withHtml("<a href='/logout'>Esci</a>");
+    })
+)
+// Controllo autenticazione.
+->before(new AuthRequired());
+
+// Avvio il routing della richiesta.
 $router->start();
