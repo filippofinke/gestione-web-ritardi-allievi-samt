@@ -5,7 +5,7 @@ use FilippoFinke\Response;
 use FilippoFinke\Request;
 use FilippoFinke\RouteGroup;
 use FilippoFinke\Utils\Database;
-use FilippoFinke\Middlewares\AdminRequired;
+use FilippoFinke\Libs\Mail;
 use FilippoFinke\Middlewares\AuthRequired;
 
 // Includo le librerie attraverso l'autoload generato da composer.
@@ -57,6 +57,9 @@ try {
     exit;
 }
 
+// Imposto l'indirizzo email dal quale inviare la posta elettronica.
+Mail::setFromEmail("test@test.com");
+
 // Creao un nuovo oggetto router che si occuperà di smistare le richieste.
 $router = new Router();
 
@@ -65,6 +68,8 @@ $router->setNotFound(function (Request $req, Response $res) {
     return $res->redirect("/");
 });
 
+// Percorso pagina di cambio password.
+$router->get("/login/{token}", "FilippoFinke\Controllers\Auth::login");
 // Percorso pagina di accesso.
 $router->get("/login", "FilippoFinke\Controllers\Auth::login");
 // Percorso pagina di recupero password.
@@ -74,6 +79,10 @@ $router->get("/forgot-password", "FilippoFinke\Controllers\Auth::forgotPassword"
 $router->post("/login", "FilippoFinke\Controllers\Auth::doLogin");
 // Percorso per eseguire la disconnessione.
 $router->get("/logout", "FilippoFinke\Controllers\Auth::doLogout");
+// Percorso per richiedere una email di recupero password.
+$router->post("/forgot-password", "FilippoFinke\Controllers\Auth::doForgotPassword");
+// Percorso per cambiare la password.
+$router->post("/change-password", "FilippoFinke\Controllers\Auth::doChangePassword");
 
 // Gruppo di percorsi dove è richiesto solamente l'accesso.
 $homeRoutes = new RouteGroup();
