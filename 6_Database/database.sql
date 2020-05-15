@@ -87,11 +87,11 @@ INSERT INTO delay VALUES (null, "bryan.beffa@samtrevano.ch", "2020-05-20", "Caus
 # Creazione della tabella year che verrà utilizzata per
 # il salvataggio degli anni e dei semestri.
 CREATE TABLE year (
+	id INT AUTO_INCREMENT PRIMARY KEY,
 	start_first_semester DATE,
 	end_first_semester DATE,
 	start_second_semester DATE,
-	end_second_semester DATE,
-	PRIMARY KEY(start_first_semester, end_first_semester, start_second_semester, end_second_semester)
+	end_second_semester DATE
 );
 
-INSERT INTO year VALUES("2019-09-01", "2020-01-25", "2020-01-25", "2020-06-29");
+INSERT INTO year VALUES(null, "2019-09-01", "2020-01-25", "2020-01-25", "2020-06-29");
