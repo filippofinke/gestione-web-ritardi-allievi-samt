@@ -8,5 +8,9 @@
 <body>
     <h1>Forgot Password</h1>
     <a href="/login">Accedi</a>
+    <form action="/forgot-password" method="post">
+        <input type="email" name="email" placeholder="Email">
+        <button>Recupera</button>
+    </form>
 </body>
 </html>

@@ -9,11 +9,19 @@
     <h1>Login</h1>
     <a href="/forgot-password">Password dimenticata</a>
 
-    <form action="/login" method="post">
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="Password">
-        <button>Accedi</button>
-    </form>
+    <?php if($token): ?>
+        <form action="/change-password" method="post">
+            <input type="token" name="token" value="<?php echo $token; ?>">
+            <input type="password" name="password" placeholder="Password">
+            <button>Accedi</button>
+        </form>
+    <?php else: ?>
+        <form action="/login" method="post">
+            <input type="email" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
+            <button>Accedi</button>
+        </form>
+    <?php endif; ?>
      
 </body>
 </html>
