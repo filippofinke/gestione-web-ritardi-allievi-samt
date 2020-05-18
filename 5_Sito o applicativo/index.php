@@ -7,6 +7,7 @@ use FilippoFinke\RouteGroup;
 use FilippoFinke\Utils\Database;
 use FilippoFinke\Libs\Mail;
 use FilippoFinke\Middlewares\AuthRequired;
+use FilippoFinke\Middlewares\AdminRequired;
 
 // Includo le librerie attraverso l'autoload generato da composer.
 require __DIR__ . '/vendor/autoload.php';
@@ -88,12 +89,35 @@ $router->post("/change-password", "FilippoFinke\Controllers\Auth::doChangePasswo
 $homeRoutes = new RouteGroup();
 $homeRoutes->add(
     // Percorso pagina principale.
-    $router->get("/", function($req, $res) {
+    $router->get("/", function ($req, $res) {
         return $res->withHtml("<a href='/logout'>Esci</a>");
     })
 )
 // Controllo autenticazione.
 ->before(new AuthRequired());
+
+// Gruppo di percorsi dove è richiesto avere un permesso di amministratore.
+$adminRoutes = new RouteGroup();
+$adminRoutes->add(
+    // Percorso creazione utenti.
+    $router->post("/user", "FilippoFinke\Controllers\User::insert"),
+    // Percorso aggiornamento utenti.
+    $router->post("/user/{email}", "FilippoFinke\Controllers\User::update"),
+    // Percorso rimozione utenti.
+    $router->delete("/user/{email}", "FilippoFinke\Controllers\User::delete"),
+    // Percorso aggiornamento impostazioni.
+    $router->post("/setting/{setting}", "FilippoFinke\Controllers\Setting::update"),
+    // Percorso creazione anno.
+    $router->post("/year", "FilippoFinke\Controllers\Year::insert"),
+    // Percorso rimozione anni.
+    $router->delete("/year/{id}", "FilippoFinke\Controllers\Year::delete"),
+    // Percorso creazione sezione.
+    $router->post("/section", "FilippoFinke\Controllers\Section::insert"),
+    // Percorso rimozione sezione.
+    $router->delete("/section/{name}", "FilippoFinke\Controllers\Section::delete"),
+)
+// Controllo permesso di amministratore.
+->before(new AdminRequired());
 
 // Avvio il routing della richiesta.
 $router->start();
