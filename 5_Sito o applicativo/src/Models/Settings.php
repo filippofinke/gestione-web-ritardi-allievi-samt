@@ -77,7 +77,12 @@ class Settings
         $setting = self::get($name);
 
         if ($setting) {
-            if (call_user_func_array(array("FilippoFinke\Libs\Validator", "isValid" . $setting["type"]), array($value))) {
+            if (
+                call_user_func_array(
+                    array("FilippoFinke\Libs\Validator", "isValid" . $setting["type"]),
+                    array($value)
+                )
+            ) {
                 $pdo = Database::getConnection();
                 $query = "UPDATE setting SET value = :value WHERE name = :name";
                 try {

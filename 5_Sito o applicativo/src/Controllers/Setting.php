@@ -31,7 +31,7 @@ class Setting
                 return $res->withStatus(200);
             }
         } catch (Exception $e) {
-            $res->withText($e->getMessage());
+            return $res->withStatus(500)->withText($e->getMessage());
         }
         return $res->withStatus(400);
     }
