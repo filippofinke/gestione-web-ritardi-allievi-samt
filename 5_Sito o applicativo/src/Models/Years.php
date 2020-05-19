@@ -40,10 +40,34 @@ class Years
         $query = "SELECT * FROM year WHERE CURRENT_DATE() >= start_first_semester AND CURRENT_DATE() <= end_second_semester;";
         try {
             $stm = $pdo->query($query);
-            return $stm->fetchAll(\PDO::FETCH_ASSOC);
+            return $stm->fetch(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             return false;
         }
+    }
+
+    /**
+     * Metodo utilizzato per ricavare il semestre corrente.
+     * 
+     * @return array Il semestre corrente.
+     */
+    public static function getCurrentSemester()
+    {
+        $year = self::getCurrentYear();
+        if (!$year) return false;
+
+        $start = $end = null;
+        $start_first = \strtotime($year["start_first_semester"]);
+        $end_first = \strtotime($year["end_first_semester"]);
+        $current = time();
+        if ($current >= $start_first && $current <= $end_first) {
+            $start = $year["start_first_semester"];
+            $end = $year["end_first_semester"];
+        } else {
+            $start = $year["start_second_semester"];
+            $end = $year["end_second_semester"];
+        }
+        return array($start, $end);
     }
 
     /**

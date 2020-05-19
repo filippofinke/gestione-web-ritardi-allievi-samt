@@ -63,11 +63,11 @@ class Users
     public static function insert($email, $name, $lastname)
     {
         $pdo = Database::getConnection();
-        $query = "INSERT INTO user VALUES(:email, :name, :lastname, '', 0)";
+        $query = "INSERT INTO user VALUES(:email, :name, :lastname, '', 7)";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':email', strtolower($email));
-        $stm->bindParam(':name', ucfirst($name));
-        $stm->bindParam(':lastname', ucfirst($lastname));
+        $stm->bindValue(':email', strtolower($email));
+        $stm->bindValue(':name', ucfirst($name));
+        $stm->bindValue(':lastname', ucfirst($lastname));
         try {
             return $stm->execute() && Tokens::sendActivationToken($email);
         } catch (\PDOException $e) {
@@ -133,7 +133,7 @@ class Users
                 $query = "UPDATE user SET password = :password WHERE email = :email";
                 $stm = $pdo->prepare($query);
                 $stm->bindParam(':email', $email);
-                $stm->bindParam(':password', password_hash($password, PASSWORD_DEFAULT));
+                $stm->bindValue(':password', password_hash($password, PASSWORD_DEFAULT));
                 try {
                     $_SESSION["login_email"] = $email;
                     return $stm->execute();
