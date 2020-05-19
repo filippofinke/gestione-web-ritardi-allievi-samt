@@ -1,13 +1,17 @@
 <?php
 
+use FilippoFinke\Middlewares\AuthRequired;
 use FilippoFinke\Router;
 use FilippoFinke\Response;
 use FilippoFinke\Request;
 use FilippoFinke\RouteGroup;
 use FilippoFinke\Utils\Database;
 use FilippoFinke\Libs\Mail;
-use FilippoFinke\Middlewares\AuthRequired;
 use FilippoFinke\Middlewares\AdminRequired;
+use FilippoFinke\Middlewares\CreateRequired;
+use FilippoFinke\Middlewares\InsertRequired;
+use FilippoFinke\Middlewares\SelectRequired;
+use FilippoFinke\Models\Settings;
 
 // Includo le librerie attraverso l'autoload generato da composer.
 require __DIR__ . '/vendor/autoload.php';
@@ -59,9 +63,9 @@ try {
 }
 
 // Imposto l'indirizzo email dal quale inviare la posta elettronica.
-Mail::setFromEmail("test@test.com");
+Mail::setFromEmail(Settings::getValue("from_email"));
 
-// Creao un nuovo oggetto router che si occuperà di smistare le richieste.
+// Creo un nuovo oggetto router che si occuperà di smistare le richieste.
 $router = new Router();
 
 // Imposto una funzione di default da chiamare in caso la pagina richiesta non esista.
@@ -88,17 +92,35 @@ $router->post("/change-password", "FilippoFinke\Controllers\Auth::doChangePasswo
 // Gruppo di percorsi dove è richiesto solamente l'accesso.
 $homeRoutes = new RouteGroup();
 $homeRoutes->add(
-    // Percorso pagina principale.
-    $router->get("/", function ($req, $res) {
-        return $res->withHtml("<a href='/logout'>Esci</a>");
-    })
+    // Percorso pagina ritardi.
+    $router->get("/", "FilippoFinke\Controllers\Home::delays"),
+    // Percorso pagina recuperi.
+    $router->get("/recoveries", "FilippoFinke\Controllers\Home::recoveries"),
+    // Percorso creazione studente.
+    $router->post("/student", "FilippoFinke\Controllers\Student::insert")->before(new InsertRequired()),
+    // Percorso per creare un pdf dei ritardi.
+    $router->get("/student/{email}/pdf", "FilippoFinke\Controllers\Student::pdf")->before(new CreateRequired()),
+    // Percorso per ricavare i ritardi da recuperare di uno studente.
+    $router->get("/student/{email}/{type}", "FilippoFinke\Controllers\Student::delays")->before(new SelectRequired()),
+    // Percorso per ricavare i ritardi di uno studente.
+    $router->get("/student/{email}", "FilippoFinke\Controllers\Student::delays")->before(new SelectRequired()),
+    // Percorso di rimozione ritardo.
+    $router->delete("/delay/{id}", "FilippoFinke\Controllers\Delay::delete")->before(new InsertRequired()),
+    // Percorso di aggiornamento ritardo.
+    $router->post("/delay/{id}", "FilippoFinke\Controllers\Delay::update")->before(new InsertRequired()),
+    // Percorso di aggiunta ritardo.
+    $router->post("/delay", "FilippoFinke\Controllers\Delay::insert")->before(new InsertRequired())
 )
-// Controllo autenticazione.
-->before(new AuthRequired());
+    // Controllo autenticazione.
+    ->before(new AuthRequired());
 
 // Gruppo di percorsi dove è richiesto avere un permesso di amministratore.
 $adminRoutes = new RouteGroup();
 $adminRoutes->add(
+    // Percorso pagina di gestione utenti.
+    $router->get("/users", "FilippoFinke\Controllers\Home::users"),
+    // Percorso pagina di gestione impostazioni.
+    $router->get("/settings", "FilippoFinke\Controllers\Home::settings"),
     // Percorso creazione utenti.
     $router->post("/user", "FilippoFinke\Controllers\User::insert"),
     // Percorso aggiornamento utenti.
@@ -116,8 +138,8 @@ $adminRoutes->add(
     // Percorso rimozione sezione.
     $router->delete("/section/{name}", "FilippoFinke\Controllers\Section::delete"),
 )
-// Controllo permesso di amministratore.
-->before(new AdminRequired());
+    // Controllo permesso di amministratore.
+    ->before(new AdminRequired());
 
 // Avvio il routing della richiesta.
 $router->start();
