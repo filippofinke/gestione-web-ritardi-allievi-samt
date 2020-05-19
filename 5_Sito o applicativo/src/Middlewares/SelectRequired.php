@@ -1,27 +1,28 @@
 <?php
 
 namespace FilippoFinke\Middlewares;
-use FilippoFinke\Libs\Session;
+
+use FilippoFinke\Libs\Permission;
 
 /**
- * AuthRequired.php
+ * SelectRequired.php
  * Classe utilizzata per controllare se un utente
- * ha l'accesso a determinati percorsi come utente autenticato.
+ * può visionare i ritardi.
  *
  * @author Filippo Finke
  */
-class AuthRequired
+class SelectRequired
 {
     /**
-     * Controlla se l'utente ha eseguito l'accesso.
+     * Controlla se l'utente può visionare dati.
      *
      * @param $request La richiesta.
      * @param $response La risposta.
      */
     public function __invoke($request, $response)
     {
-        if (!Session::isAuthenticated()) {
-            $response->redirect("/login");
+        if (!Permission::canSelect()) {
+            $response->withStatus(401);
             exit;
         }
     }

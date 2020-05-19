@@ -1,27 +1,28 @@
 <?php
 
 namespace FilippoFinke\Middlewares;
-use FilippoFinke\Libs\Session;
+
+use FilippoFinke\Libs\Permission;
 
 /**
- * AuthRequired.php
+ * CreateRequired.php
  * Classe utilizzata per controllare se un utente
- * ha l'accesso a determinati percorsi come utente autenticato.
+ * può creare i PDF.
  *
  * @author Filippo Finke
  */
-class AuthRequired
+class CreateRequired
 {
     /**
-     * Controlla se l'utente ha eseguito l'accesso.
+     * Controlla se l'utente può creare i PDF.
      *
      * @param $request La richiesta.
      * @param $response La risposta.
      */
     public function __invoke($request, $response)
     {
-        if (!Session::isAuthenticated()) {
-            $response->redirect("/login");
+        if (!Permission::canCreate()) {
+            $response->withStatus(401);
             exit;
         }
     }
