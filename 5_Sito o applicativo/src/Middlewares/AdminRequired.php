@@ -22,7 +22,7 @@ class AdminRequired
     public function __invoke($request, $response)
     {
         if (!Permission::isAdmin()) {
-            $response->redirect("/login");
+            $response->redirect(BASE."login");
             exit;
         }
     }

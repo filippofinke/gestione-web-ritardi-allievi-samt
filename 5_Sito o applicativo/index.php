@@ -70,7 +70,7 @@ $router = new Router();
 
 // Imposto una funzione di default da chiamare in caso la pagina richiesta non esista.
 $router->setNotFound(function (Request $req, Response $res) {
-    return $res->redirect("/");
+    return $res->redirect(BASE);
 });
 
 // Percorso pagina di cambio password.
@@ -136,7 +136,7 @@ $adminRoutes->add(
     // Percorso creazione sezione.
     $router->post("/section", "FilippoFinke\Controllers\Section::insert"),
     // Percorso rimozione sezione.
-    $router->delete("/section/{name}", "FilippoFinke\Controllers\Section::delete"),
+    $router->delete("/section/{name}", "FilippoFinke\Controllers\Section::delete")
 )
 // Controllo permesso di amministratore.
 ->before(new AdminRequired());
