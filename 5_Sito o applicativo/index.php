@@ -141,5 +141,7 @@ $adminRoutes->add(
 // Controllo permesso di amministratore.
 ->before(new AdminRequired());
 
+// Rimuovo dall'url la base.
+$_SERVER["REQUEST_URI"] = str_replace(BASE, "/", $_SERVER["REQUEST_URI"]);
 // Avvio il routing della richiesta.
 $router->start();

@@ -4,7 +4,13 @@
 <head>
 
   <?php require __DIR__ . '/../Global/head.php'; ?>
-
+  <style>
+    .bg-login-image {
+      background: url(<?php echo BASE; ?>assets/img/login.jpg);
+      background-position: center;
+      background-size: cover
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-primary">
