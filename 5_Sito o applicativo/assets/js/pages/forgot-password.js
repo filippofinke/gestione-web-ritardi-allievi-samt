@@ -3,7 +3,9 @@ $("#forgot-password").on("submit", (e) => {
 
   let email = $("#email").val();
 
-  $("#btn-forgot-password").prop("disabled", true);
+  $("#btn-forgot-password")
+    .prop("disabled", true)
+    .html('<div class="spinner-border"></div>');
   $.post("forgot-password", {
     email,
   })
@@ -24,6 +26,8 @@ $("#forgot-password").on("submit", (e) => {
       }
     })
     .then(() => {
-      $("#btn-forgot-password").prop("disabled", false);
+      $("#btn-forgot-password")
+        .prop("disabled", false)
+        .html("Recupera la password");
     });
 });

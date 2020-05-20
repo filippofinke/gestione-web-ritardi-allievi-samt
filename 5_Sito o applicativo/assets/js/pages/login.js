@@ -3,7 +3,9 @@ $("#login-form").on("submit", (e) => {
 
   let params = $("#login-form").serialize();
 
-  $("#login-btn").prop("disabled", true);
+  $("#login-btn")
+    .prop("disabled", true)
+    .html('<div class="spinner-border"></div>');
   $.post("login", params)
     .then(() => {
       location.href = "";
@@ -12,6 +14,6 @@ $("#login-form").on("submit", (e) => {
       $("#error-login").text("Credenziali errate!").show();
     })
     .then(() => {
-      $("#login-btn").prop("disabled", false);
+      $("#login-btn").prop("disabled", false).html("Accedi");
     });
 });
