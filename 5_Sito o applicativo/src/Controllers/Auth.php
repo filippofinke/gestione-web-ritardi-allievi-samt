@@ -76,7 +76,7 @@ class Auth
     public static function doLogout(Request $req, Response $res)
     {
         Session::logout();
-        return $res->redirect("/login");
+        return $res->redirect(BASE . "login");
     }
 
     /**
