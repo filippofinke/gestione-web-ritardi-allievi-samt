@@ -111,8 +111,8 @@ $homeRoutes->add(
     // Percorso di aggiunta ritardo.
     $router->post("/delay", "FilippoFinke\Controllers\Delay::insert")->before(new InsertRequired())
 )
-    // Controllo autenticazione.
-    ->before(new AuthRequired());
+// Controllo autenticazione.
+->before(new AuthRequired());
 
 // Gruppo di percorsi dove è richiesto avere un permesso di amministratore.
 $adminRoutes = new RouteGroup();
@@ -138,8 +138,8 @@ $adminRoutes->add(
     // Percorso rimozione sezione.
     $router->delete("/section/{name}", "FilippoFinke\Controllers\Section::delete"),
 )
-    // Controllo permesso di amministratore.
-    ->before(new AdminRequired());
+// Controllo permesso di amministratore.
+->before(new AdminRequired());
 
 // Avvio il routing della richiesta.
 $router->start();
