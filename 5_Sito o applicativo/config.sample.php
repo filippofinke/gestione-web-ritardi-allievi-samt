@@ -19,5 +19,5 @@ define("DB_HOST", "127.0.0.1");
 define("DB_NAME", "ritardi");
 // L'username dell'utente da utilizzare per collegarsi al database.
 define("DB_USERNAME", "USERNAME");
-// La password da utilizzarre per il collegamento al database.
+// La password da utilizzare per il collegamento al database.
 define("DB_PASSWORD", "PASSWORD");
