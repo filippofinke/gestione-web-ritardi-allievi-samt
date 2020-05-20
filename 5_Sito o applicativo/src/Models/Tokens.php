@@ -35,7 +35,7 @@ class Tokens
             $stm->bindParam('email', $email);
             $stm->bindParam('token', $hash);
             $time = time() + 86400 * 7;
-            $stm->bindParam('created_at', date("Y-m-d", $time));
+            $stm->bindValue('created_at', date("Y-m-d", $time));
             $link = "http://" . $_SERVER['SERVER_NAME'] . BASE . "login/$token";
             $content = "Salve,<br>può accedere al suo account attraverso questo link: <a href='$link'>$link</a><br><br>Esso ha una validità di 7 giorni.<br><br>Gestione Ritardi Web SAMT";
             Mail::send($email, "Nuovo account | Gestione Ritardi", $content);
