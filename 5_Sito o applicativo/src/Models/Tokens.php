@@ -38,8 +38,7 @@ class Tokens
             $stm->bindValue('created_at', date("Y-m-d", $time));
             $link = "http://" . $_SERVER['SERVER_NAME'] . BASE . "login/$token";
             $content = "Salve,<br>può accedere al suo account attraverso questo link: <a href='$link'>$link</a><br><br>Esso ha una validità di 7 giorni.<br><br>Gestione Ritardi Web SAMT";
-            Mail::send($email, "Nuovo account | Gestione Ritardi", $content);
-            return $stm->execute();
+            return $stm->execute() && Mail::send($email, "Nuovo account | Gestione Ritardi", $content);
         } catch (\PDOException $e) {
         }
     }
