@@ -176,7 +176,7 @@ use FilippoFinke\Libs\Permission;
                         <div class="row mt-2">
                             <div class="col-sm-12">
                                 <div class="input-group">
-                                    <button type="submit" class="btn btn-primary btn-block">Crea</button>
+                                    <button id="new-user-button" type="submit" class="btn btn-primary btn-block">Crea</button>
                                 </div>
                             </div>
                         </div>

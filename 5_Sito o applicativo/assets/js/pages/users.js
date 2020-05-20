@@ -53,6 +53,9 @@ $(document).ready(function () {
 
   $("#new-user-form").on("submit", function (event) {
     event.preventDefault();
+    $("#new-user-button")
+      .prop("disabled", true)
+      .html('<div class="spinner-border"></div>');
     $.post("user", $("#new-user-form").serialize())
       .then(() => {
         $("#users-modal").modal("toggle");
@@ -78,6 +81,9 @@ $(document).ready(function () {
         if (err.status == 500) {
           $("#error-message").text(err.responseText).show();
         }
+      })
+      .then(() => {
+        $("#new-user-button").prop("disabled", false).html("Crea");
       });
   });
 });
