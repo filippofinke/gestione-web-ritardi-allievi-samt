@@ -19,7 +19,7 @@ class PDF extends \Fpdf\Fpdf
     /**
      * Metodo che genera l'intestazione del file PDF.
      */
-    function Header()
+    public function Header()
     {
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(($this->GetPageWidth() - 20), 7, 'GESTIONE RITARDI', 'B', 0, 'T');
