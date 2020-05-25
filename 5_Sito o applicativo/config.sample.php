@@ -14,15 +14,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
-// Cartella di base dell'applicativo.
+/**
+ * Configurazione cartella base.
+ */
 define("BASE", "/");
 
 /**
  * Configurazioni riguardanti la banca dati.
  */
 // Indirizzo di connessione del database.
-define("DB_HOST", "127.0.0.1");
+define("DB_HOST", "HOST");
 // Il nome del database.
 define("DB_NAME", "ritardi");
 // L'username dell'utente da utilizzare per collegarsi al database.
