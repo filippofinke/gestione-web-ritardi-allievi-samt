@@ -25,6 +25,7 @@ CREATE TABLE user (
     permission INT NOT NULL
 );
 
+INSERT INTO user VALUES("admin@samtrevano.ch", "Admin", "Account", "$2y$10$oW/jP8Jg0OQSR6aT7VGf8OCTcdG8eoqYxN/4PQDsYBj81K05jPFAm", 8);
 INSERT INTO user VALUES("filippo.finke@samtrevano.ch", "Filippo", "Finke", "$2y$10$oW/jP8Jg0OQSR6aT7VGf8OCTcdG8eoqYxN/4PQDsYBj81K05jPFAm", 8);
 
 # Creazione della tabella token che verrà utilizzata per
