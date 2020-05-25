@@ -7,6 +7,14 @@
  * @author Filippo Finke
  */
 
+/**
+ * Configurazione messaggi di errore.
+ */
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 // Cartella di base dell'applicativo.
 define("BASE", "/");
 
