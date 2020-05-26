@@ -32,8 +32,8 @@ class Tokens
             $pdo = Database::getConnection();
             $query = "INSERT INTO token VALUES(:email, :token, :created_at)";
             $stm = $pdo->prepare($query);
-            $stm->bindParam('email', $email);
-            $stm->bindParam('token', $hash);
+            $stm->bindValue('email', $email);
+            $stm->bindValue('token', $hash);
             $time = time() + 86400 * 7;
             $stm->bindValue('created_at', date("Y-m-d", $time));
             $link = "http://" . $_SERVER['SERVER_NAME'] . BASE . "login/$token";
@@ -59,8 +59,8 @@ class Tokens
                 $pdo = Database::getConnection();
                 $query = "INSERT INTO token(email, token) VALUE(:email, :token)";
                 $stm = $pdo->prepare($query);
-                $stm->bindParam('email', $email);
-                $stm->bindParam('token', $hash);
+                $stm->bindValue('email', $email);
+                $stm->bindValue('token', $hash);
                 $link = "http://" . $_SERVER['SERVER_NAME'] . BASE . "login/$token";
                 $content = "Salve,<br>può cambiare la sua password premendo il seguente link: <a href='$link'>$link</a><br><br>Esso ha una validità di " . (self::EXPIRE_AFTER) . " minuti.<br><br>Gestione Ritardi Web SAMT";
                 return $stm->execute() && Mail::send($email, "Recupero password | Gestione Ritardi", $content);
@@ -83,12 +83,12 @@ class Tokens
         $query = "SELECT email FROM token WHERE token = :token AND CURRENT_TIMESTAMP() - created_at <= " . (self::EXPIRE_AFTER * 60);
         try {
             $stm = $pdo->prepare($query);
-            $stm->bindParam('token', $token);
+            $stm->bindValue('token', $token);
             $stm->execute();
             $email = $stm->fetchColumn();
             if ($email) {
                 $stm = $pdo->prepare("DELETE FROM token WHERE token = :token");
-                $stm->bindParam('token', $token);
+                $stm->bindValue('token', $token);
                 $stm->execute();
                 return $email;
             }
@@ -109,7 +109,7 @@ class Tokens
             $pdo = Database::getConnection();
             $query = "DELETE FROM token WHERE email = :email";
             $stm = $pdo->prepare($query);
-            $stm->bindParam('email', $email);
+            $stm->bindValue('email', $email);
             return $stm->execute();
         } catch (\PDOException $e) {
         }
