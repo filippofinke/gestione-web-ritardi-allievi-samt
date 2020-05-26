@@ -70,8 +70,8 @@ CREATE TABLE year (
 	end_second_semester DATE
 );
 
-INSERT INTO year VALUES(null, "2019-09-01", "2020-01-25", "2020-01-25", "2020-06-29");
-INSERT INTO year VALUES(null, "2018-09-01", "2019-01-25", "2019-01-25", "2019-06-29");
+INSERT INTO year VALUES(null, "2019-09-01", "2020-01-25", "2020-01-26", "2020-06-29");
+INSERT INTO year VALUES(null, "2018-09-01", "2019-01-25", "2019-01-26", "2019-06-29");
 
 
 # Creazione della tabella student che verrà utilizzata per
