@@ -2,15 +2,15 @@
 
 namespace FilippoFinke\Controllers;
 
-use FilippoFinke\Models\Delays;
-use FilippoFinke\Models\Sections;
-use FilippoFinke\Models\Settings;
-use FilippoFinke\Models\Students;
 use FilippoFinke\Request;
 use FilippoFinke\Response;
 use FilippoFinke\Models\Users;
 use FilippoFinke\Models\Years;
 use FilippoFinke\Models\RecoveriesPDF;
+use FilippoFinke\Models\Delays;
+use FilippoFinke\Models\Sections;
+use FilippoFinke\Models\Settings;
+use FilippoFinke\Models\Students;
 
 /**
  * Home.php
@@ -37,11 +37,11 @@ class Home
         $students = Students::getByYear($year);
         foreach ($students as $key => $student) {
             if ($year == $currentYearId) {
-                $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]);
+                $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]) ?? [];
             } else {
                 $students[$key]["delays"] = Delays::getById($student["id"]);
             }
-            $students[$key]["to_recover"] = Delays::getToRecoverById($student["id"]);
+            $students[$key]["to_recover"] = Delays::getToRecoverById($student["id"]) ?? [];
         }
 
         $sections = Sections::getAll();
@@ -68,13 +68,12 @@ class Home
     {
         $students = Students::getAll();
         foreach ($students as $key => $student) {
-            $to_recover = Delays::getToRecoverById($student["id"]);
-            if (count($to_recover) == 0) {
+            $to_recover = Delays::getToRecoverById($student["id"]) ?? [];
+            if (!$to_recover || count($to_recover) == 0) {
                 unset($students[$key]);
                 continue;
             }
-
-            $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]);
+            $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]) ?? [];
             $students[$key]["to_recover"] = $to_recover;
         }
         return $res->render(

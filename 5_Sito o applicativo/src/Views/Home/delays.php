@@ -11,16 +11,6 @@
     require __DIR__ . '/../Global/head.php'; ?>
     <link href="assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="assets/css/dataTables.searchHighlight.css" rel="stylesheet">
-    <style>
-        .modal-full {
-            min-width: 100%;
-            margin: 0;
-        }
-
-        .modal-full .modal-content {
-            min-height: 100vh;
-        }
-    </style>
 </head>
 
 <body id="page-top">
@@ -47,14 +37,14 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Ritardi</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Ritardi <?php echo ($selectedYear) ? date("Y", strtotime($selectedYear["start_first_semester"])) . "/" . date("Y", strtotime($selectedYear["end_second_semester"])) : " - Anno scolastico non valido."; ?></h1>
                     </div>
 
                     <!-- Users table -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary d-inline">Studenti</h6>
-                            <button data-toggle="modal" data-target="#students-modal" class="float-right btn btn-sm btn-primary shadow-sm text-white" <?php echo (Permission::canInsert()) ? "" : "disabled"; ?>>
+                            <button data-toggle="modal" data-target="#students-modal" class="float-right btn btn-sm btn-primary shadow-sm text-white" <?php echo (Permission::canInsert() && $canInteract) ? "" : "disabled"; ?>>
                                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Aggiungi uno studente
                             </button>
                         </div>
@@ -74,7 +64,7 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($students as $student) : ?>
-                                            <tr id="<?php echo $student['email']; ?>">
+                                            <tr id="<?php echo $student['id']; ?>">
                                                 <td><?php echo $student["name"]; ?></td>
                                                 <td><?php echo $student["last_name"]; ?></td>
                                                 <td><?php echo $student["section"]; ?></td>
@@ -83,7 +73,7 @@
                                                 <td><?php echo count($student["to_recover"]); ?></td>
                                                 <td class="text-center">
                                                     <button class="btn btn-primary view-button mt-1" <?php echo (Permission::canSelect()) ? "" : "disabled"; ?>>Visualizza</button>
-                                                    <button class="btn btn-primary new-delay-button mt-1" <?php echo (Permission::canInsert()) ? "" : "disabled"; ?>>Aggiungi ritardo</button>
+                                                    <button class="btn btn-primary new-delay-button mt-1" <?php echo (Permission::canInsert() && $canInteract) ? "" : "disabled"; ?>>Aggiungi ritardo</button>
                                                     <button class="btn btn-primary create-pdf mt-1" <?php echo (Permission::canCreate()) ? "" : "disabled"; ?>>Crea PDF</button>
                                                 </td>
                                             </tr>
@@ -183,7 +173,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <button data-toggle="modal" data-target="#delays-modal" class="float-right btn btn-sm btn-primary shadow-sm text-white mb-2" <?php echo (Permission::canInsert()) ? "" : "disabled"; ?>>
+                    <button data-toggle="modal" data-target="#delays-modal" class="float-right btn btn-sm btn-primary shadow-sm text-white mb-2" <?php echo (Permission::canInsert() && $canInteract) ? "" : "disabled"; ?>>
                         <i class="fas fa-gavel fa-sm text-white-50"></i> Aggiungi un ritardo
                     </button>
                     <div class="table-responsive">
@@ -283,12 +273,9 @@
                     [5, 10, 15],
                     [5, 10, 15]
                 ],
+                "aaSorting": [],
                 "columnDefs": [{
-                    "targets": [0],
-                    "orderable": false
-                }, {
-                    "targets": [4],
-                    "searchable": false,
+                    "targets": [0, 4],
                     "orderable": false
                 }]
             });
@@ -320,8 +307,7 @@
             $('#new-delay-form').on('submit', function(event) {
                 event.preventDefault();
                 let data = $('#new-delay-form').serialize();
-                let email = $('#view-student-email').text();
-                data += "&email=" + email;
+                data += "&id=" + currentRow.id;
 
                 $.post("delay", data).then((data) => {
                     $('#delays-modal').modal('toggle');
@@ -359,8 +345,9 @@
 
             $('#students-table tbody').on('click', '.view-button', async function() {
                 currentRow = $(this).parents('tr')[0];
-                let student_email = $(this).parents('tr')[0].id;
-                let delays = await fetch('student/' + student_email).then(r => r.json());
+                let student_id = currentRow.id;
+                let delays = await fetch('student/' + student_id).then(r => r.json());
+                let student_email = currentRow.getElementsByTagName("td")[3].innerText;
                 $("#view-student-email").text(student_email);
                 delays_table.clear();
                 for (let delay of delays) {
@@ -369,7 +356,7 @@
                         delay.observations,
                         (delay.recovered) ? delay.recovered : "No",
                         (Number(delay.justified)) ? "Si" : "No",
-                        '<button class="btn btn-danger" <?php echo (Permission::canInsert()) ? "" : "disabled"; ?>>Elimina</button>'
+                        '<button class="btn btn-danger" <?php echo (Permission::canInsert() && $canInteract) ? "" : "disabled"; ?>>Elimina</button>'
                     ]).node();
                     node.lastChild.classList = "text-center";
                     node.id = delay.id;
@@ -380,15 +367,12 @@
 
             $('#students-table tbody').on('click', '.new-delay-button', function() {
                 currentRow = $(this).parents('tr')[0];
-
-                let student_email = $(this).parents('tr')[0].id;
-                $("#view-student-email").text(student_email);
                 $("#delays-modal").modal('show');
             });
 
             $('#students-table tbody').on('click', '.create-pdf', function() {
-                let student_email = $(this).parents('tr')[0].id;
-                var url = "student/" + student_email + "/pdf";
+                let student_id = $(this).parents('tr')[0].id;
+                var url = "student/" + student_id + "/pdf";
                 $('#iframe').attr("src", url);
                 $('#download-button').attr("href", url);
                 $('#pdf-modal').modal('toggle');
@@ -436,7 +420,7 @@
                         '0',
                         `<button class="btn btn-primary view-button mt-1" <?php echo (Permission::canSelect()) ? "" : "disabled"; ?>>Visualizza</button> <button class="btn btn-primary new-delay-button mt-1" <?php echo (Permission::canInsert()) ? "" : "disabled"; ?>>Aggiungi ritardo</button> <button class="btn btn-primary create-pdf mt-1" <?php echo (Permission::canCreate()) ? "" : "disabled"; ?>>Crea PDF</button>`
                     ]).node();
-                    node.id = email;
+                    node.id = data;
                     node.lastChild.classList = "text-center";
                     table.draw(false);
                     $('#new-student-form').trigger("reset");

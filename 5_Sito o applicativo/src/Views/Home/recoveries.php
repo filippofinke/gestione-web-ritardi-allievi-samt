@@ -44,6 +44,9 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary d-inline">Studenti</h6>
+                            <button data-toggle="modal" data-target="#pdf-modal" class="float-right btn btn-sm btn-primary shadow-sm text-white" <?php echo (Permission::canCreate() && count($students) > 0) ? "" : "disabled"; ?>>
+                                <i class="fas fa-file fa-sm text-white-50"></i> Crea PDF
+                            </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -61,7 +64,7 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($students as $student) : ?>
-                                            <tr id="<?php echo $student['email']; ?>">
+                                            <tr id="<?php echo $student['id']; ?>">
                                                 <td><?php echo $student["name"]; ?></td>
                                                 <td><?php echo $student["last_name"]; ?></td>
                                                 <td><?php echo $student["section"]; ?></td>
@@ -128,6 +131,27 @@
         </div>
     </div>
 
+    <div class="modal fade" id="pdf-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Visualizza PDF</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin:0px;padding:0px;overflow:hidden">
+                        <iframe src="<?php echo BASE . 'recoveries/pdf'; ?>" id="iframe" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="<?php echo BASE . 'recoveries/pdf'; ?>" id="download-button" class="btn btn-primary text-white" download>Scarica</a>
+                    <button type="button" class="btn btn-secondary" id="print-pdf">Stampa</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?php require __DIR__ . '/../Global/scripts.php'; ?>
     <script src="assets/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="assets/js/jquery.highlight.js"></script>
@@ -146,20 +170,11 @@
                     [5, 10, 15],
                     [5, 10, 15]
                 ],
-                "order": [
-                    [0, "asc"]
-                ],
+                "aaSorting": [],
                 "columnDefs": [{
-                    "targets": [3],
-                    "searchable": false,
+                    "targets": [0, 3],
                     "orderable": false
                 }]
-            });
-
-            delays_table.on('draw', function() {
-                var body = $(delays_table.table().body());
-                body.unhighlight();
-                body.highlight(delays_table.search());
             });
 
             var table = $('#students-table').DataTable({
@@ -172,6 +187,12 @@
                     "searchable": false,
                     "orderable": false
                 }]
+            });
+
+            delays_table.on('draw', function() {
+                var body = $(delays_table.table().body());
+                body.unhighlight();
+                body.highlight(delays_table.search());
             });
 
             table.on('draw', function() {
@@ -209,8 +230,9 @@
 
             $('#students-table tbody').on('click', '.view-button', async function() {
                 currentRow = $(this).parents('tr')[0];
-                let student_email = $(this).parents('tr')[0].id;
-                let delays = await fetch('student/' + student_email + '/recoveries').then(r => r.json());
+                let student_id = currentRow.id;
+                let delays = await fetch('student/' + student_id + '/recoveries').then(r => r.json());
+                let student_email = currentRow.getElementsByTagName("td")[3].innerText;
                 $("#view-student-email").text(student_email);
                 delays_table.clear();
                 for (let delay of delays) {
@@ -225,6 +247,10 @@
                 }
                 delays_table.draw();
                 $("#view-student-modal").modal('show');
+            });
+
+            $('#print-pdf').on('click', function() {
+                $('#iframe').get(0).contentWindow.print();
             });
 
         });
