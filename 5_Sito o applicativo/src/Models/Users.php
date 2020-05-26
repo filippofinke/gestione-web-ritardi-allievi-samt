@@ -43,7 +43,7 @@ class Users
         $pdo = Database::getConnection();
         $query = "SELECT * FROM user WHERE email = :email";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':email', $email);
+        $stm->bindValue(':email', $email);
         try {
             $stm->execute();
             return $stm->fetch(\PDO::FETCH_ASSOC);
@@ -88,8 +88,8 @@ class Users
         $pdo = Database::getConnection();
         $query = "UPDATE user SET permission = :permission WHERE email = :email";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':email', $email);
-        $stm->bindParam(':permission', $permission);
+        $stm->bindValue(':email', $email);
+        $stm->bindValue(':permission', $permission);
         try {
             return $stm->execute();
         } catch (\PDOException $e) {
@@ -109,7 +109,7 @@ class Users
         $pdo = Database::getConnection();
         $query = "DELETE FROM user WHERE email = :email";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':email', $email);
+        $stm->bindValue(':email', $email);
         try {
             return $stm->execute();
         } catch (\PDOException $e) {
@@ -132,7 +132,7 @@ class Users
                 $pdo = Database::getConnection();
                 $query = "UPDATE user SET password = :password WHERE email = :email";
                 $stm = $pdo->prepare($query);
-                $stm->bindParam(':email', $email);
+                $stm->bindValue(':email', $email);
                 $stm->bindValue(':password', password_hash($password, PASSWORD_DEFAULT));
                 try {
                     $_SESSION["login_email"] = $email;
