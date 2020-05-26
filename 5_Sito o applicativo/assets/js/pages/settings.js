@@ -4,11 +4,32 @@ $(document).ready(function () {
       [5, 10, 15],
       [5, 10, 15],
     ],
+    columnDefs: [
+      {
+        targets: [1],
+        orderable: false,
+      },
+    ],
   });
+
+  let years = $("#years-table").DataTable({
+    lengthMenu: [
+      [5, 10, 15],
+      [5, 10, 15],
+    ],
+    ordering: false
+  });
+
   sections.on("draw", function () {
     let body = sections.table().body();
     $(body).unhighlight();
     $(body).highlight(sections.search());
+  });
+
+  years.on("draw", function () {
+    let body = years.table().body();
+    $(body).unhighlight();
+    $(body).highlight(years.search());
   });
 
   $("#sections-table tbody").on("click", "button", function () {
@@ -17,15 +38,9 @@ $(document).ready(function () {
       $.ajax({
         url: "section/" + row.id,
         type: "DELETE",
-      })
-        .then(() => {
-          sections.row(row).remove().draw();
-        })
-        .catch(() => {
-          alert(
-            "Impossibile eliminare la sezione, essa è collegata ad uno o più studenti!"
-          );
-        });
+      }).then(() => {
+        sections.row(row).remove().draw();
+      });
     }
   });
 
@@ -51,19 +66,6 @@ $(document).ready(function () {
           $("#section-error-message").show().text(err.responseText);
         }
       });
-  });
-
-  let years = $("#years-table").DataTable({
-    lengthMenu: [
-      [5, 10, 15],
-      [5, 10, 15],
-    ],
-  });
-
-  years.on("draw", function () {
-    let body = years.table().body();
-    $(body).unhighlight();
-    $(body).highlight(years.search());
   });
 
   $("#new-year-form").on("submit", function (event) {
@@ -113,7 +115,11 @@ $(document).ready(function () {
   });
 
   $("#years-table tbody").on("click", "button", function () {
-    if (confirm("Sei sicuro di volere eliminare questo anno scolastico?")) {
+    if (
+      confirm(
+        "Sei sicuro di volere eliminare questo anno scolastico?\n\nATTENZIONE: Verranno eliminati anche tutti gli studenti e i ritardi correlati!"
+      )
+    ) {
       let row = $(this).parents("tr")[0];
       years.row(row).remove().draw();
       $.ajax({
