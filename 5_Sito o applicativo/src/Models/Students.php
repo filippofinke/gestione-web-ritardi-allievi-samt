@@ -80,7 +80,11 @@ class Students
      */
     public static function insert($email, $name, $lastname, $section)
     {
-        $year = Years::getCurrentYear()["id"];
+        $year = Years::getCurrentYear();
+        if (!$year) {
+            throw new \Exception("Prima di inserire uno studente deve essere presente un anno scolastico!");
+        }
+        $year = $year["id"];
         $pdo = Database::getConnection();
         $query = "INSERT INTO student VALUES(null, :email, :name, :lastname, :section, :year)";
         $stm = $pdo->prepare($query);
