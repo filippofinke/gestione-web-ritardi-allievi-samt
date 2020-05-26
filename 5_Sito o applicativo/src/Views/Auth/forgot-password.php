@@ -31,12 +31,12 @@
                     <div class="form-group">
                       <input id="email" type="email" class="form-control form-control-user" placeholder="Indirizzo email" required>
                     </div>
+                    <div id="success-message" class="alert alert-success" style="display: none;">
+                      Email di recupero inviata con successo!
+                    </div>
                     <button id="btn-forgot-password" class="btn btn-primary btn-user btn-block">
                       Recupera la password
                     </button>
-                    <br>
-                    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
-                    <div id="success-message" class="alert alert-success" style="display: none;"></div>
                   </form>
                   <hr>
                   <div class="text-center">
