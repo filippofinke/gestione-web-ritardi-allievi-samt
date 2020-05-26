@@ -21,7 +21,7 @@ class Sections
     public static function getAll()
     {
         $pdo = Database::getConnection();
-        $query = "SELECT * FROM section";
+        $query = "SELECT * FROM section WHERE deleted = 0";
         try {
             $stm = $pdo->query($query);
             return $stm->fetchAll(\PDO::FETCH_ASSOC);
@@ -39,9 +39,9 @@ class Sections
     public static function insert($name)
     {
         $pdo = Database::getConnection();
-        $query = "INSERT INTO section VALUES(:name)";
+        $query = "INSERT INTO section VALUES(:name, 0)";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':name', $name);
+        $stm->bindValue(':name', $name);
         try {
             return $stm->execute();
         } catch (\PDOException $e) {
@@ -58,9 +58,10 @@ class Sections
     public static function delete($name)
     {
         $pdo = Database::getConnection();
-        $query = "DELETE FROM section WHERE name = :name";
+        $query = "UPDATE section SET deleted = :flag WHERE name = :name";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':name', $name);
+        $stm->bindValue(':flag', 1);
+        $stm->bindValue(':name', $name);
         try {
             return $stm->execute();
         } catch (\PDOException $e) {
