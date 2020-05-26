@@ -6,9 +6,10 @@ use Exception;
 use FilippoFinke\Libs\Validator;
 use FilippoFinke\Models\Students;
 use FilippoFinke\Models\Delays;
-use FilippoFinke\Models\PDF;
+use FilippoFinke\Models\StudentPDF;
 use FilippoFinke\Request;
 use FilippoFinke\Response;
+use FilippoFinke\Utils\Database;
 
 /**
  * Student.php
@@ -42,7 +43,7 @@ class Student
                 && $section
                 && Students::insert($email, $name, $lastname, $section)
             ) {
-                return $res->withStatus(200);
+                return $res->withStatus(200)->withText(Database::getConnection()->lastInsertId());
             }
         } catch (Exception $e) {
             return $res->withStatus(500)->withText($e->getMessage());
@@ -59,8 +60,8 @@ class Student
      */
     public static function pdf(Request $req, Response $res)
     {
-        $email = $req->getAttribute('email');
-        $pdf = new PDF($email);
+        $id = $req->getAttribute('id');
+        $pdf = new StudentPDF($id);
     }
 
     /**
@@ -72,13 +73,13 @@ class Student
      */
     public static function delays(Request $req, Response $res)
     {
-        $email = $req->getAttribute('email');
+        $id = $req->getAttribute('id');
         $type = $req->getAttribute('type');
         $delays = null;
         if ($type == "recoveries") {
-            $delays = Delays::getToRecoverByEmail($email);
+            $delays = Delays::getToRecoverById($id);
         } else {
-            $delays = Delays::getByEmail($email);
+            $delays = Delays::getById($id);
         }
         return $res->withStatus(200)->withJson($delays);
     }

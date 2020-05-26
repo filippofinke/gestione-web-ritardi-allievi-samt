@@ -24,12 +24,12 @@ class Delay
      */
     public static function insert(Request $req, Response $res)
     {
-        $email = $req->getParam('email');
+        $id = $req->getParam('id');
         $date = $req->getParam('date');
         $observations = $req->getParam('observations') ?? null;
         $justified = $req->getParam('justified') ?? 0;
         try {
-            $result = Delays::insert($email, $date, htmlspecialchars($observations), $justified);
+            $result = Delays::insert($id, $date, htmlspecialchars($observations), $justified);
             if ($result) {
                 return $res->withStatus(200)->withText($result);
             }

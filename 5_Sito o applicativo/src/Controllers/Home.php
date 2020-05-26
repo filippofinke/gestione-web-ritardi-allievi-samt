@@ -10,6 +10,7 @@ use FilippoFinke\Request;
 use FilippoFinke\Response;
 use FilippoFinke\Models\Users;
 use FilippoFinke\Models\Years;
+use FilippoFinke\Models\RecoveriesPDF;
 
 /**
  * Home.php
@@ -28,17 +29,30 @@ class Home
      */
     public static function delays(Request $req, Response $res)
     {
-        $students = Students::getAll();
+        $currentYearId = Years::getCurrentYear();
+        if ($currentYearId) $currentYearId = $currentYearId["id"];
+        $year = $req->getAttribute('year');
+        if (!$year) $year = $currentYearId;
+
+        $students = Students::getByYear($year);
         foreach ($students as $key => $student) {
-            $students[$key]["delays"] = Delays::getInCurrentSemesterByEmail($student["email"]);
-            $students[$key]["to_recover"] = Delays::getToRecoverByEmail($student["email"]);
+            if ($year == $currentYearId) {
+                $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]);
+            } else {
+                $students[$key]["delays"] = Delays::getById($student["id"]);
+            }
+            $students[$key]["to_recover"] = Delays::getToRecoverById($student["id"]);
         }
+
         $sections = Sections::getAll();
+        $selectedYear = Years::getYearById($year);
         return $res->render(
             __DIR__ . '/../Views/Home/delays.php',
             array(
                 "students" => $students,
-                "sections" => $sections
+                "sections" => $sections,
+                "selectedYear" => $selectedYear,
+                "canInteract" => ($currentYearId == $year)
             )
         );
     }
@@ -54,19 +68,42 @@ class Home
     {
         $students = Students::getAll();
         foreach ($students as $key => $student) {
-            $to_recover = Delays::getToRecoverByEmail($student["email"]);
+            $to_recover = Delays::getToRecoverById($student["id"]);
             if (count($to_recover) == 0) {
                 unset($students[$key]);
                 continue;
             }
 
-            $students[$key]["delays"] = Delays::getInCurrentSemesterByEmail($student["email"]);
+            $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]);
             $students[$key]["to_recover"] = $to_recover;
         }
         return $res->render(
             __DIR__ . '/../Views/Home/recoveries.php',
             array("students" => $students)
         );
+    }
+
+    /**
+     * Metodo che si occupa di renderizzare il pdf la pagina dei recuperi.
+     *
+     * @param $request La richiesta effettuata dall'utente.
+     * @param $response La risposta da ritornare.
+     * @return Response La risposta.
+     */
+    public static function recoveriesPdf(Request $req, Response $res)
+    {
+        $students = Students::getAll();
+        foreach ($students as $key => $student) {
+            $to_recover = Delays::getToRecoverById($student["id"]);
+            if (count($to_recover) == 0) {
+                unset($students[$key]);
+                continue;
+            }
+
+            $students[$key]["delays"] = Delays::getInCurrentSemesterById($student["id"]);
+            $students[$key]["to_recover"] = $to_recover;
+        }
+        $pdf = new RecoveriesPDF($students);
     }
 
     /**
