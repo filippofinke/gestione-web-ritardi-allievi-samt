@@ -20,7 +20,7 @@ class Validator
 
     public static function isValidName($name)
     {
-        return preg_match('/^[A-Za-zÀ-ÖØ-öø-ÿ]{1,20}$/', $name);
+        return preg_match('/^[A-Za-zÀ-ÖØ-öø-ÿ ]{1,20}$/', $name);
     }
 
     /**

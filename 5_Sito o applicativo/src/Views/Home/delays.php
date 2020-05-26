@@ -117,7 +117,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="input-group custom">
-                                    <input style="text-transform: capitalize;" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]{1,20}" name="name" type="text" class="form-control" placeholder="Nome" required maxlength="20" minlength="1">
+                                    <input style="text-transform: capitalize;" pattern="[A-Za-zÀ-ÖØ-öø-ÿ ]{1,20}" name="name" type="text" class="form-control" placeholder="Nome" required maxlength="20" minlength="1">
                                     <div class="input-group-append custom">
                                         <span class="input-group-text"><i class="fa fa-user"></i></span>
                                     </div>
@@ -125,7 +125,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="input-group custom">
-                                    <input style="text-transform: capitalize;" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]{1,20}" name="lastname" type="text" class="form-control" placeholder="Cognome" required maxlength="20" minlength="1">
+                                    <input style="text-transform: capitalize;" pattern="[A-Za-zÀ-ÖØ-öø-ÿ ]{1,20}" name="lastname" type="text" class="form-control" placeholder="Cognome" required maxlength="20" minlength="1">
                                     <div class="input-group-append custom">
                                         <span class="input-group-text"><i class="fa fa-user"></i></span>
                                     </div>
