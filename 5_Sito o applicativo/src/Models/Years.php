@@ -20,10 +20,30 @@ class Years
     public static function getAll()
     {
         $pdo = Database::getConnection();
-        $query = "SELECT * FROM year";
+        $query = "SELECT * FROM year ORDER BY start_first_semester DESC";
         try {
             $stm = $pdo->query($query);
             return $stm->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Metodo utilizzato per ricavare un anno dal suo id.
+     *
+     * @param $id L'id dell'anno.
+     * @return array Array di anni.
+     */
+    public static function getYearById($id)
+    {
+        $pdo = Database::getConnection();
+        $query = "SELECT * FROM year WHERE id = :id";
+        try {
+            $stm = $pdo->prepare($query);
+            $stm->bindValue(":id", $id);
+            $stm->execute();
+            return $stm->fetch(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             return false;
         }
@@ -99,10 +119,10 @@ class Years
         $pdo = Database::getConnection();
         $query = "INSERT INTO year VALUES(null, :sfs, :efs, :sss, :ess)";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':sfs', $start_first_date);
-        $stm->bindParam(':efs', $end_first_date);
-        $stm->bindParam(':sss', $start_second_date);
-        $stm->bindParam(':ess', $end_second_date);
+        $stm->bindValue(':sfs', $start_first_date);
+        $stm->bindValue(':efs', $end_first_date);
+        $stm->bindValue(':sss', $start_second_date);
+        $stm->bindValue(':ess', $end_second_date);
         try {
             if ($stm->execute()) {
                 return $pdo->lastInsertId();
@@ -123,7 +143,7 @@ class Years
         $pdo = Database::getConnection();
         $query = "DELETE FROM year WHERE id = :id";
         $stm = $pdo->prepare($query);
-        $stm->bindParam(':id', $id);
+        $stm->bindValue(':id', $id);
         try {
             return $stm->execute();
         } catch (\PDOException $e) {
