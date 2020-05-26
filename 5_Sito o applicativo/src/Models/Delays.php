@@ -55,7 +55,7 @@ class Delays
             $delays = $stm->fetchAll(\PDO::FETCH_ASSOC);
             $max = Settings::getValue('max_delays');
             if (count($delays) >= $max) {
-                return array_slice($delays, 0, ($max - count($delays) + 1));
+                return array_slice($delays, 0, (count($delays) - $max + 1));
             } else {
                 return [];
             }
