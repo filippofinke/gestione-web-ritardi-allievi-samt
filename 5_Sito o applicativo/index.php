@@ -7,11 +7,13 @@ use FilippoFinke\Request;
 use FilippoFinke\RouteGroup;
 use FilippoFinke\Utils\Database;
 use FilippoFinke\Libs\Mail;
+use FilippoFinke\Libs\Session;
 use FilippoFinke\Middlewares\AdminRequired;
 use FilippoFinke\Middlewares\CreateRequired;
 use FilippoFinke\Middlewares\InsertRequired;
 use FilippoFinke\Middlewares\SelectRequired;
 use FilippoFinke\Models\Settings;
+use FilippoFinke\Models\Users;
 
 // Includo le librerie attraverso l'autoload generato da composer.
 require __DIR__ . '/vendor/autoload.php';
@@ -94,16 +96,20 @@ $homeRoutes = new RouteGroup();
 $homeRoutes->add(
     // Percorso pagina ritardi.
     $router->get("/", "FilippoFinke\Controllers\Home::delays"),
+    // Percorso pagina ritardi con un anno specifico.
+    $router->get("/delays/{year}", "FilippoFinke\Controllers\Home::delays"),
+    // Percorso pdf pagina recuperi.
+    $router->get("/recoveries/pdf", "FilippoFinke\Controllers\Home::recoveriesPdf")->before(new CreateRequired()),
     // Percorso pagina recuperi.
     $router->get("/recoveries", "FilippoFinke\Controllers\Home::recoveries"),
     // Percorso creazione studente.
     $router->post("/student", "FilippoFinke\Controllers\Student::insert")->before(new InsertRequired()),
     // Percorso per creare un pdf dei ritardi.
-    $router->get("/student/{email}/pdf", "FilippoFinke\Controllers\Student::pdf")->before(new CreateRequired()),
+    $router->get("/student/{id}/pdf", "FilippoFinke\Controllers\Student::pdf")->before(new CreateRequired()),
     // Percorso per ricavare i ritardi da recuperare di uno studente.
-    $router->get("/student/{email}/{type}", "FilippoFinke\Controllers\Student::delays")->before(new SelectRequired()),
+    $router->get("/student/{id}/{type}", "FilippoFinke\Controllers\Student::delays")->before(new SelectRequired()),
     // Percorso per ricavare i ritardi di uno studente.
-    $router->get("/student/{email}", "FilippoFinke\Controllers\Student::delays")->before(new SelectRequired()),
+    $router->get("/student/{id}", "FilippoFinke\Controllers\Student::delays")->before(new SelectRequired()),
     // Percorso di rimozione ritardo.
     $router->delete("/delay/{id}", "FilippoFinke\Controllers\Delay::delete")->before(new InsertRequired()),
     // Percorso di aggiornamento ritardo.
@@ -143,5 +149,16 @@ $adminRoutes->add(
 
 // Rimuovo dall'url la base.
 $_SERVER["REQUEST_URI"] = str_replace(BASE, "/", $_SERVER["REQUEST_URI"]);
+
+if (Session::isAuthenticated()) {
+    $user = Users::getByEmail($_SESSION["email"]);
+    if ($user) {
+        unset($user["password"]);
+        Session::authenticate($user);
+    } else {
+        Session::logout();
+    }
+}
+
 // Avvio il routing della richiesta.
 $router->start();
