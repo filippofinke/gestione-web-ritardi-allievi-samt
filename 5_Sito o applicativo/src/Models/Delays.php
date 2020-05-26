@@ -43,7 +43,7 @@ class Delays
     public static function getToRecoverById($id)
     {
         $year = Years::getCurrentYear();
-        if (!$year) return false;
+        if (!$year) return null;
         $pdo = Database::getConnection();
         $query = "SELECT id, DATE_FORMAT(date, '%d.%m.%Y') as 'date', observations, DATE_FORMAT(recovered, '%d.%m.%Y') as 'recovered', justified FROM delay WHERE student = :student AND recovered IS NULL AND justified = 0 AND date BETWEEN :start AND :end ORDER BY delay.date DESC";
         try {
@@ -55,7 +55,7 @@ class Delays
             $delays = $stm->fetchAll(\PDO::FETCH_ASSOC);
             $max = Settings::getValue('max_delays');
             if (count($delays) >= $max) {
-                return array_slice($delays, ($max - 1));
+                return array_slice($delays, 0, ($max - count($delays) + 1));
             } else {
                 return [];
             }
@@ -73,6 +73,7 @@ class Delays
     public static function getInCurrentSemesterById($id)
     {
         $semester = Years::getCurrentSemester();
+        if (!$semester) return null;
         $start = $semester[0];
         $end = $semester[1];
 
