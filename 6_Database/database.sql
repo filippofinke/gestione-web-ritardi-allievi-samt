@@ -46,7 +46,7 @@ CREATE TABLE setting (
 );
 
 INSERT INTO setting VALUES("max_delays", "3", "number");
-INSERT INTO setting VALUES("from_email", "gestione-ritardi@no-reply.ch", "email");
+INSERT INTO setting VALUES("from_email", "no-reply@gestione-ritardi-cpt.ch", "email");
 
 # Creazione della tabella section che verrà utilizzata per
 # immagazzinare tutte le sezioni.
@@ -87,8 +87,8 @@ CREATE TABLE student (
     FOREIGN KEY(year) REFERENCES year(id) ON DELETE CASCADE
 );
 
-INSERT INTO student VALUES(null, "bryan.beffa@samtrevano.ch", "Bryan", "Beffa", "SAM I4AA", 1);
-INSERT INTO student VALUES(null, "bryan.beffa@samtrevano.ch", "Bryan", "Beffa", "SAM I3AA", 2);
+INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I4AA", 1);
+INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I3AA", 2);
 
 # Creazione della tabella delay che verrà utilizzata per
 # il salvataggio dei ritardi degli studenti.
