@@ -42,7 +42,7 @@ class Settings
         $query = "SELECT * FROM setting WHERE name = :name";
         try {
             $stm = $pdo->prepare($query);
-            $stm->bindParam(':name', $name);
+            $stm->bindValue(':name', $name);
             $stm->execute();
             return $stm->fetch(\PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
@@ -82,8 +82,8 @@ class Settings
                 $query = "UPDATE setting SET value = :value WHERE name = :name";
                 try {
                     $stm = $pdo->prepare($query);
-                    $stm->bindParam(':value', $value);
-                    $stm->bindParam(':name', $name);
+                    $stm->bindValue(':value', $value);
+                    $stm->bindValue(':name', $name);
                     return $stm->execute();
                 } catch (\PDOException $e) {
                     return false;
