@@ -55,12 +55,16 @@ Database::setPassword(DB_PASSWORD);
 try {
     Database::getConnection();
 } catch (PDOException $e) {
+    // Creo una risposta.
     $response = new Response();
+    // Creo un array di variabili da passare alla pagina di errore.
     $info = array(
         "title" => "Impossibile stabilire la connessione con il database!",
         "message" => "Errore: " . $e->getMessage()
     );
+    // Carico la pagina di errore.
     $response->render(__DIR__ . "/src/Views/Error/error.php", $info);
+    // Termino l'esecuzione.
     exit;
 }
 
@@ -72,6 +76,7 @@ $router = new Router();
 
 // Imposto una funzione di default da chiamare in caso la pagina richiesta non esista.
 $router->setNotFound(function (Request $req, Response $res) {
+    // Eseguo un redirect alla pagina principale dell'applicativo.
     return $res->redirect(BASE);
 });
 
@@ -150,12 +155,18 @@ $adminRoutes->add(
 // Rimuovo dall'url la base.
 $_SERVER["REQUEST_URI"] = str_replace(BASE, "/", $_SERVER["REQUEST_URI"]);
 
+// Controllo se l'utente è autenticato.
 if (Session::isAuthenticated()) {
+    // Ricavo le informazioni dell'utente.
     $user = Users::getByEmail($_SESSION["email"]);
+    // Controllo che l'utente esista.
     if ($user) {
+        // Rimuovo il campo password per sicurezza.
         unset($user["password"]);
+        // Aggiorno i dati della sessione.
         Session::authenticate($user);
     } else {
+        // Eseguo il logout dato che l'utente non esiste.
         Session::logout();
     }
 }
