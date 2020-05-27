@@ -2,7 +2,6 @@
 
 namespace FilippoFinke\Models;
 
-use Exception;
 use FilippoFinke\Libs\Validator;
 use FilippoFinke\Utils\Database;
 
@@ -71,7 +70,7 @@ class Users
         try {
             return $stm->execute() && Tokens::sendActivationToken($email);
         } catch (\PDOException $e) {
-            throw new Exception("Un utente con questa email esiste già!");
+            throw new \Exception("Un utente con questa email esiste già!");
         }
     }
 

@@ -2,7 +2,6 @@
 
 namespace FilippoFinke\Controllers;
 
-use Exception;
 use FilippoFinke\Models\Settings;
 use FilippoFinke\Request;
 use FilippoFinke\Response;
@@ -34,7 +33,7 @@ class Setting
                 // Ritorno una richiesta con stato 200 - Success.
                 return $res->withStatus(200);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Ritorno una richiesta con stato 500 - Internal Server Error e un errore.
             return $res->withStatus(500)->withText($e->getMessage());
         }

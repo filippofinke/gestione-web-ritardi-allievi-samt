@@ -2,7 +2,6 @@
 
 namespace FilippoFinke\Models;
 
-use Exception;
 use FilippoFinke\Utils\Database;
 
 /**
@@ -45,7 +44,7 @@ class Sections
         try {
             return $stm->execute();
         } catch (\PDOException $e) {
-            throw new Exception("Un sezione con questo nome esiste già!");
+            throw new \Exception("Un sezione con questo nome esiste già!");
         }
     }
 

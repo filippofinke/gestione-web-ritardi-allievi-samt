@@ -119,7 +119,7 @@ class Delays
             }
             return $id;
         } catch (\PDOException $e) {
-            throw new \Exception("Impossibile inserire il ritardo!" . $e->getMessage());
+            throw new \Exception("Impossibile inserire il ritardo!");
         }
     }
 

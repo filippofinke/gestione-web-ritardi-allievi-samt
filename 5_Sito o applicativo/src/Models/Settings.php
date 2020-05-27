@@ -2,7 +2,6 @@
 
 namespace FilippoFinke\Models;
 
-use Exception;
 use FilippoFinke\Utils\Database;
 
 /**
@@ -90,10 +89,10 @@ class Settings
                     return false;
                 }
             } else {
-                throw new Exception("Il valore deve essere di tipo: " . $setting["type"]);
+                throw new \Exception("Il valore deve essere di tipo: " . $setting["type"]);
             }
         } else {
-            throw new Exception("Impostazione inesistente");
+            throw new \Exception("Impostazione inesistente");
         }
     }
 }

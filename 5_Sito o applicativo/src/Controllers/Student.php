@@ -2,7 +2,6 @@
 
 namespace FilippoFinke\Controllers;
 
-use Exception;
 use FilippoFinke\Libs\Validator;
 use FilippoFinke\Models\Students;
 use FilippoFinke\Models\Delays;
@@ -40,8 +39,9 @@ class Student
         try {
             // Controllo la validità dell'email.
             if (!Validator::isValidEmail($email, 'samtrevano.ch')) {
-                throw new Exception("L'email deve terminare con @samtrevano.ch!");
+                throw new \Exception("L'email deve terminare con @samtrevano.ch!");
             }
+
             // Controllo la validità dei campi ed inserisco lo studente.
             if (
                 Validator::isValidName($name)
@@ -52,7 +52,7 @@ class Student
                 // Ritorno una richiesta con stato 200 - Success e l'id dello studente.
                 return $res->withStatus(200)->withText(Database::getConnection()->lastInsertId());
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Ritorno una richiesta con stato 500 - Internal Server Error e un errore.
             return $res->withStatus(500)->withText($e->getMessage());
         }

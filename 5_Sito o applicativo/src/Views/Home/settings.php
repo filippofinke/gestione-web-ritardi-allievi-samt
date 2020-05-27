@@ -172,7 +172,7 @@
                 <div class="modal-body">
                     <form id="new-section-form">
                         <div class="input-group custom mt-2">
-                            <input pattern="[A-Za-z0-9 ]{1,10}" name="name" type="text" class="form-control" placeholder="Nome della sezione" minlength="1" maxlength="10" required>
+                            <input pattern="[A-Za-z0-9 ]{1,10}" title="Puoi usare solamente lettere dell'alfabeto, numero o spazi!" name="name" type="text" class="form-control" placeholder="Nome della sezione" minlength="1" maxlength="10" required>
                             <div class="input-group-append custom">
                                 <span class="input-group-text"><i class="fa fa-pen"></i></span>
                             </div>

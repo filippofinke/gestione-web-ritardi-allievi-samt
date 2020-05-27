@@ -2,7 +2,6 @@
 
 namespace FilippoFinke\Controllers;
 
-use Exception;
 use FilippoFinke\Request;
 use FilippoFinke\Response;
 use FilippoFinke\Models\Years;
@@ -43,7 +42,7 @@ class Year
                     // Ritorno una richiesta con stato 200 - Success e l'id dell'anno scolastico.
                     return $res->withStatus(200)->withText($result);
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Ritorno una richiesta con stato 500 - Internal Server Error e un errore.
                 return $res->withStatus(500)->withText($e->getMessage());
             }
