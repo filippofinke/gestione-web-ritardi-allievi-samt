@@ -20,7 +20,9 @@
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block bg-password-image"></div>
+              <div class="col-lg-6 d-none d-lg-block bg-password-image">
+                <a class="position-absolute ml-1" style="bottom: 0px;" href="https://www.freepik.com/free-vector/forgot-password-concept-illustration_7070629.htm">Di @stories</a>
+              </div>
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
