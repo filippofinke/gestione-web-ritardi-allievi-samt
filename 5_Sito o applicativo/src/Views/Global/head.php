@@ -12,6 +12,7 @@ if (!empty($path[1])) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="author" content="Filippo Finke">
+<!-- Template: SB Admin 2 -> https://startbootstrap.com/themes/sb-admin-2/ -->
 
 <title>Ritardi <?php echo $pageTitle; ?></title>
 
