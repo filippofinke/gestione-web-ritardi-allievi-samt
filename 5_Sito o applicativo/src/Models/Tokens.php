@@ -26,7 +26,9 @@ class Tokens
      */
     public static function sendActivationToken($email)
     {
+        // Genero 20 byte casuali e li rappresento in esadecimale.
         $token = bin2hex(random_bytes(20));
+        // Creo l'hash da salvare nel datbase.
         $hash = hash("sha256", $token);
         try {
             $pdo = Database::getConnection();
@@ -34,8 +36,10 @@ class Tokens
             $stm = $pdo->prepare($query);
             $stm->bindValue('email', $email);
             $stm->bindValue('token', $hash);
+            // Imposto la validità di 7 giorni.
             $time = time() + 86400 * 7;
             $stm->bindValue('created_at', date("Y-m-d", $time));
+            // Ricavo il dominio dinamicamente.
             $link = "http://" . $_SERVER['SERVER_NAME'] . BASE . "login/$token";
             $content = "Salve,<br>può accedere al suo account attraverso questo link: <a href='$link'>$link</a><br><br>Esso ha una validità di 7 giorni.<br><br>Gestione Ritardi Web SAMT";
             return $stm->execute() && Mail::send($email, "Nuovo account | Gestione Ritardi", $content);
@@ -53,7 +57,9 @@ class Tokens
     {
         if (Users::getByEmail($email)) {
             self::deleteToken($email);
+            // Genero 20 byte casuali e li rappresento in esadecimale.
             $token = bin2hex(random_bytes(20));
+            // Creo l'hash da salvare nel datbase.
             $hash = hash("sha256", $token);
             try {
                 $pdo = Database::getConnection();
@@ -61,6 +67,7 @@ class Tokens
                 $stm = $pdo->prepare($query);
                 $stm->bindValue('email', $email);
                 $stm->bindValue('token', $hash);
+                // Ricavo il dominio dinamicamente.
                 $link = "http://" . $_SERVER['SERVER_NAME'] . BASE . "login/$token";
                 $content = "Salve,<br>può cambiare la sua password premendo il seguente link: <a href='$link'>$link</a><br><br>Esso ha una validità di " . (self::EXPIRE_AFTER) . " minuti.<br><br>Gestione Ritardi Web SAMT";
                 return $stm->execute() && Mail::send($email, "Recupero password | Gestione Ritardi", $content);
@@ -78,6 +85,7 @@ class Tokens
      */
     public static function useToken($token)
     {
+        // Creo l'hash del token.
         $token = hash("sha256", $token);
         $pdo = Database::getConnection();
         $query = "SELECT email FROM token WHERE token = :token AND CURRENT_TIMESTAMP() - created_at <= " . (self::EXPIRE_AFTER * 60);
@@ -86,6 +94,7 @@ class Tokens
             $stm->bindValue('token', $token);
             $stm->execute();
             $email = $stm->fetchColumn();
+            // Controllo la presenza dell'email.
             if ($email) {
                 $stm = $pdo->prepare("DELETE FROM token WHERE token = :token");
                 $stm->bindValue('token', $token);

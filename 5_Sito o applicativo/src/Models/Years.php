@@ -80,6 +80,7 @@ class Years
         $start_first = \strtotime($year["start_first_semester"]);
         $end_first = \strtotime($year["end_first_semester"]);
         $current = time();
+        // Ricavo il semestre corrente.
         if ($current >= $start_first && $current <= $end_first) {
             $start = $year["start_first_semester"];
             $end = $year["end_first_semester"];
@@ -105,6 +106,7 @@ class Years
         $start_date = \strtotime($start_first_date);
         $end_date = \strtotime($end_second_date);
 
+        // Controllo che gli anni non si sovrappongano.
         foreach ($years as $year) {
             $start_year = \strtotime($year['start_first_semester']);
             $end_year = \strtotime($year['end_second_semester']);

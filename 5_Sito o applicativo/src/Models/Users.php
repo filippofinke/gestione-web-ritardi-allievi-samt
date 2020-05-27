@@ -127,12 +127,14 @@ class Users
     public static function changePassword($token, $password)
     {
         if (Validator::isValidPassword($password)) {
+            // Uso il token di recupero password.
             $email = Tokens::useToken($token);
             if ($email) {
                 $pdo = Database::getConnection();
                 $query = "UPDATE user SET password = :password WHERE email = :email";
                 $stm = $pdo->prepare($query);
                 $stm->bindValue(':email', $email);
+                // Creo l'hash della password.
                 $stm->bindValue(':password', password_hash($password, PASSWORD_DEFAULT));
                 try {
                     $_SESSION["login_email"] = $email;

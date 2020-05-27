@@ -80,7 +80,9 @@ class Students
      */
     public static function insert($email, $name, $lastname, $section)
     {
+        // Ricavo l'anno scolastico corrente da assegnare all'utente.
         $year = Years::getCurrentYear();
+        // Controllo la presenza dell'anno scolastico nel database.
         if (!$year) {
             throw new \Exception("Prima di inserire uno studente deve essere presente un anno scolastico!");
         }

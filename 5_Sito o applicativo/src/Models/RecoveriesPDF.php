@@ -20,10 +20,12 @@ class RecoveriesPDF extends PDF
     {
         parent::__construct();
 
+        // Attivo i numeri di pagina.
         $this->AliasNbPages();
         $this->AddPage('L');
 
         $this->SetFont('Arial', 'B', 15);
+        // Stampo l'intestazione della pagina.
         $this->Cell(
             $this->GetPageWidth() - 20,
             7,
@@ -31,6 +33,7 @@ class RecoveriesPDF extends PDF
         );
         $this->Ln(10);
 
+        // Stampo i nomi delle colonne.
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(87, 7, "Email", 1);
         $this->Cell(100, 7, "Studente", 1);
@@ -40,10 +43,12 @@ class RecoveriesPDF extends PDF
         $this->Ln();
         $this->SetFont('Arial', '', 12);
 
+        // Per ogni utente ne stampo i dati.
         foreach ($students as $student) {
 
             $y = $this->GetY();
             $this->MultiCell(87, 7,  $student["email"], 1);
+            // Calcolo l'altezza della cella.
             $h = $this->GetY() - $y;
             $this->SetY($y);
             $this->SetX(97);

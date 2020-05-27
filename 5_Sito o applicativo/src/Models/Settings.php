@@ -77,6 +77,7 @@ class Settings
         $setting = self::get($name);
 
         if ($setting) {
+            // Controllo la validità del campo dinamicamente attraverso la classe Validator.
             if (call_user_func_array(array("FilippoFinke\Libs\Validator", "isValid" . $setting["type"]), array($value))) {
                 $pdo = Database::getConnection();
                 $query = "UPDATE setting SET value = :value WHERE name = :name";

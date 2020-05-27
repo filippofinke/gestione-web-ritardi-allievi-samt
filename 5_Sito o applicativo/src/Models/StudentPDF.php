@@ -24,15 +24,20 @@ class StudentPDF extends PDF
     {
         parent::__construct();
 
+        // Ricavo l'anno corrente.
         $year = Years::getCurrentYear();
+        // Ricavo lo studente.
         $student = Students::getById($id);
         if (!$student) exit;
+        // Attivo i numeri di pagina.
         $this->AliasNbPages();
         $this->AddPage('L');
 
         $this->SetFont('Arial', 'B', 15);
         $header = "";
         if ($student["year"] == $year["id"]) {
+            // Ricavo solamente i ritardi nel semestre.
+
             $semester = Years::getCurrentSemester();
             $delays = Delays::getInCurrentSemesterById($id);
             $to_recover = Delays::getToRecoverById($id);
@@ -41,12 +46,16 @@ class StudentPDF extends PDF
             $header = " dal " . $semester[0] . " al " . $semester[1] . ".";
             $subtitle = "Ritardi nel semestre: ";
         } else {
+            // Ricavo lo storico.
+            
             $delays = Delays::getById($id);
             $to_recover = Delays::getToRecoverById($id);
             $year = Years::getYearById($student["year"]);
             $header = " storico anno " . date("Y", strtotime($year["start_first_semester"])) . "/" . date("Y", strtotime($year["end_second_semester"])) . ".";
             $subtitle = "Ritardi totali: ";
         }
+
+        // Aggiungo l'header al file.
         $this->Cell(
             $this->GetPageWidth() - 20,
             7,
@@ -63,6 +72,7 @@ class StudentPDF extends PDF
 
         $this->SetFont('Arial', 'B', 12);
 
+        // Stampo i nomi delle colonne.
         $this->Cell(25, 7, "Data", 1);
         $this->Cell(25, 7, "Recupero", 1);
         $this->Cell(25, 7, "Giustificato", 1);
@@ -70,9 +80,12 @@ class StudentPDF extends PDF
         $this->Ln();
         $this->SetFont('Arial', '', 12);
 
+        // Stampo i ritardi.
         foreach ($delays as $delay) {
 
             $length = strlen($delay["observations"]);
+
+            // Creo l'altezza della cella dinamicamente.
             $cellHeight = 7;
             $cellHeight += $length > 87 ? 7 : 0;
             $cellHeight += $length > 174 ? 7 : 0;
