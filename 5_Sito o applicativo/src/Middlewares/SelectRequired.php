@@ -21,7 +21,9 @@ class SelectRequired
      */
     public function __invoke($request, $response)
     {
+        // Controllo se l'utente non può visualizzare dei ritardi.
         if (!Permission::canSelect()) {
+            // Ritorno una richiesta con codice 401 - Unauthorized.
             $response->withStatus(401);
             exit;
         }

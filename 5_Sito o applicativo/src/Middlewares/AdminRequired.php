@@ -21,8 +21,10 @@ class AdminRequired
      */
     public function __invoke($request, $response)
     {
+        // Controllo se l'utente non è admin.
         if (!Permission::isAdmin()) {
-            $response->redirect(BASE."login");
+            // Redirect alla pagina di accesso.
+            $response->redirect(BASE . "login");
             exit;
         }
     }

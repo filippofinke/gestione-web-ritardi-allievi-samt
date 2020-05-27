@@ -21,7 +21,9 @@ class CreateRequired
      */
     public function __invoke($request, $response)
     {
+        // Controllo se l'utente non può creare PDF.
         if (!Permission::canCreate()) {
+            // Ritorno una richiesta con codice 401 - Unauthorized.
             $response->withStatus(401);
             exit;
         }

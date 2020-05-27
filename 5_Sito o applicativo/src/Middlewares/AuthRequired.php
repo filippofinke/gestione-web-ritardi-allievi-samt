@@ -1,6 +1,7 @@
 <?php
 
 namespace FilippoFinke\Middlewares;
+
 use FilippoFinke\Libs\Session;
 
 /**
@@ -20,8 +21,10 @@ class AuthRequired
      */
     public function __invoke($request, $response)
     {
+        // Controllo se l'utente non è autenticato.
         if (!Session::isAuthenticated()) {
-            $response->redirect(BASE."login");
+            // Redirect alla pagina di accesso.
+            $response->redirect(BASE . "login");
             exit;
         }
     }

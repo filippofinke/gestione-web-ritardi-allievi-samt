@@ -21,7 +21,9 @@ class InsertRequired
      */
     public function __invoke($request, $response)
     {
+        // Controllo se l'utente non può inserire dei ritardi.
         if (!Permission::canInsert()) {
+            // Ritorno una richiesta con codice 401 - Unauthorized.
             $response->withStatus(401);
             exit;
         }
