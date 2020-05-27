@@ -50,6 +50,27 @@ class Students
     }
 
     /**
+     * Metodo utilizzato per ricavare uno studente dalla sua email e anno.
+     * 
+     * @param $id L'id dell'anno.
+     * @return array Array di studenti.
+     */
+    private static function getByYearAndEmail($year, $email)
+    {
+        $pdo = Database::getConnection();
+        $query = "SELECT * FROM student WHERE year = :year AND email = :email";
+        try {
+            $stm = $pdo->prepare($query);
+            $stm->bindValue(':year', $year);
+            $stm->bindValue(':email', $email);
+            $stm->execute();
+            return $stm->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
      * Metodo utilizzato per ricavare uno studente dal suo id.
      *
      * @param $id L'id dell'utente.
@@ -87,6 +108,9 @@ class Students
             throw new \Exception("Prima di inserire uno studente deve essere presente un anno scolastico!");
         }
         $year = $year["id"];
+        if (self::getByYearAndEmail($year, $email)) {
+            throw new \Exception("Esiste già uno studente con questa email in questo anno!");
+        }
         $pdo = Database::getConnection();
         $query = "INSERT INTO student VALUES(null, :email, :name, :lastname, :section, :year)";
         $stm = $pdo->prepare($query);
