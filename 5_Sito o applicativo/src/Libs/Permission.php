@@ -41,6 +41,7 @@ class Permission
         if ($permission === null) {
             $permission = $_SESSION["permission"];
         }
+        // Controllo che il bit del permesso sia impostato.
         return ($permission & self::ADMINISTRATOR) === self::ADMINISTRATOR;
     }
 
@@ -55,6 +56,7 @@ class Permission
         if ($permission === null) {
             $permission = $_SESSION["permission"];
         }
+        // Controllo che il bit del permesso sia impostato.
         return ($permission & self::INSERT) === self::INSERT || self::isAdmin($permission);
     }
 
@@ -69,6 +71,7 @@ class Permission
         if ($permission === null) {
             $permission = $_SESSION["permission"];
         }
+        // Controllo che il bit del permesso sia impostato.
         return ($permission & self::SELECT) === self::SELECT || self::isAdmin($permission);
     }
 
@@ -83,6 +86,7 @@ class Permission
         if ($permission === null) {
             $permission = $_SESSION["permission"];
         }
+        // Controllo che il bit del permesso sia impostato.
         return ($permission & self::CREATE) === self::CREATE || self::isAdmin($permission);
     }
 }

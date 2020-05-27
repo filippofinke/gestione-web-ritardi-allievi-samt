@@ -2,9 +2,6 @@
 
 namespace FilippoFinke\Libs;
 
-use FilippoFinke\Request;
-use FilippoFinke\Response;
-
 /**
  * Mail.php
  * Classe utilizzata per gestire l'invio di posta elettronica.
@@ -38,6 +35,7 @@ class Mail
      */
     public static function send($to, $subject, $message)
     {
+        // Creo gli headers per l'invio della email.
         $eol = "\r\n";
         $headers = "From: <" . self::$fromEmail . ">" . $eol;
         $headers .= "Content-Type: text/html; charset=UTF-8" . $eol;

@@ -62,6 +62,7 @@ class Validator
         $start_second_date = strtotime($start_second_date);
         $end_second_date = strtotime($end_second_date);
 
+        // Controllo gli intervalli delle date.
         return $start_first_date < $end_first_date && $start_second_date > $end_first_date && $start_second_date < $end_second_date;
     }
 
@@ -88,6 +89,7 @@ class Validator
         if ($valid && $valid_domain) {
             $parts = explode('@', $email);
             $domain = array_pop($parts);
+            // Controllo che il dominio dell'email sia uguale a quello specificato.
             return $domain == $valid_domain;
         }
         return $valid;
