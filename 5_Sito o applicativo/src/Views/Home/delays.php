@@ -268,6 +268,7 @@
 
             let currentRow = null;
 
+            // Creo la tabella dei ritardi.
             var delays_table = $('#view-student-table').DataTable({
                 "lengthMenu": [
                     [5, 10, 15],
@@ -280,12 +281,14 @@
                 }]
             });
 
+            // Abilito l'highlighting alla ricerca.
             delays_table.on('draw', function() {
                 var body = $(delays_table.table().body());
                 body.unhighlight();
                 body.highlight(delays_table.search());
             });
 
+            // Creo la tabella degli studenti.
             var table = $('#students-table').DataTable({
                 "lengthMenu": [
                     [5, 10, 15],
@@ -298,12 +301,16 @@
                 }]
             });
 
+            // Abilito l'highlighting alla ricerca.
             table.on('draw', function() {
                 var body = $(table.table().body());
                 body.unhighlight();
                 body.highlight(table.search());
             });
 
+            /**
+             * Funzione che permette di aggiungere un nuovo ritardo.
+             */
             $('#new-delay-form').on('submit', function(event) {
                 event.preventDefault();
                 let data = $('#new-delay-form').serialize();
@@ -343,6 +350,9 @@
                 });
             });
 
+            /**
+             * Funzione che permette di mostrare tutti i ritardi di un utente.
+             */
             $('#students-table tbody').on('click', '.view-button', async function() {
                 currentRow = $(this).parents('tr')[0];
                 let student_id = currentRow.id;
@@ -365,11 +375,17 @@
                 $("#view-student-modal").modal('show');
             });
 
+            /**
+             * Funzione che permette di mostrare il modale di aggiunta ritardi.
+             */
             $('#students-table tbody').on('click', '.new-delay-button', function() {
                 currentRow = $(this).parents('tr')[0];
                 $("#delays-modal").modal('show');
             });
 
+            /**
+             * Funzione utilizzata per mostrare il pdf.
+             */
             $('#students-table tbody').on('click', '.create-pdf', function() {
                 let student_id = $(this).parents('tr')[0].id;
                 var url = "student/" + student_id + "/pdf";
@@ -378,10 +394,16 @@
                 $('#pdf-modal').modal('toggle');
             });
 
+            /**
+             * Funzione che permette di richiamare il form di stampa del browser.
+             */
             $('#print-pdf').on('click', function() {
                 $('#iframe').get(0).contentWindow.print();
             });
 
+            /**
+             * Funzione che permette di annullare un ritardo.
+             */
             $('#view-student-table tbody').on('click', 'button', function() {
                 if (confirm("Sei sicuro di voler annullare il ritardo?")) {
                     let row = $(this).parents('tr')[0];
@@ -402,6 +424,9 @@
                 }
             });
 
+            /**
+             * Funzione che permette di creare un nuovo studente.
+             */
             $('#new-student-form').on('submit', function(event) {
                 event.preventDefault();
                 $.post("student", $('#new-student-form').serialize()).then((data) => {

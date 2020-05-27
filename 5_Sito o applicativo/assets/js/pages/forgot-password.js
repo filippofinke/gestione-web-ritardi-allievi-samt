@@ -1,3 +1,6 @@
+/**
+ * Funzione eseguita quando viene inviato il form di recupero password.
+ */
 $("#forgot-password").on("submit", (e) => {
   e.preventDefault();
 
@@ -7,6 +10,7 @@ $("#forgot-password").on("submit", (e) => {
     .prop("disabled", true)
     .html('<div class="spinner-border"></div>');
 
+  // Invio una richiesta post con l'email alla quale inviare il recupero password.
   $.post("forgot-password", {
     email,
   })

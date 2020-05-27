@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  // Creo la tabella delle sezioni.
   let sections = $("#sections-table").DataTable({
     lengthMenu: [
       [5, 10, 15],
@@ -12,26 +13,32 @@ $(document).ready(function () {
     ],
   });
 
+  // Creo la tabella degli anni scolastici.
   let years = $("#years-table").DataTable({
     lengthMenu: [
       [5, 10, 15],
       [5, 10, 15],
     ],
-    ordering: false
+    ordering: false,
   });
 
+  // Abilito l'highlighting del testo alla ricerca.
   sections.on("draw", function () {
     let body = sections.table().body();
     $(body).unhighlight();
     $(body).highlight(sections.search());
   });
 
+  // Abilito l'highlighting del testo alla ricerca.
   years.on("draw", function () {
     let body = years.table().body();
     $(body).unhighlight();
     $(body).highlight(years.search());
   });
 
+  /**
+   * Funzione che permette di eliminare una sezione.
+   */
   $("#sections-table tbody").on("click", "button", function () {
     if (confirm("Sei sicuro di volere eliminare questa sezione?")) {
       let row = $(this).parents("tr")[0];
@@ -44,6 +51,9 @@ $(document).ready(function () {
     }
   });
 
+  /**
+   * Funzione che permette di aggiungere una nuova sezione.
+   */
   $("#new-section-form").on("submit", function (event) {
     event.preventDefault();
     $.post("section", $("#new-section-form").serialize())
@@ -68,6 +78,9 @@ $(document).ready(function () {
       });
   });
 
+  /**
+   * Funzione che permette di aggiungere un anno scolastico.
+   */
   $("#new-year-form").on("submit", function (event) {
     event.preventDefault();
     let start_first_semester = $('input[name ="start_first_semester"]').val();
@@ -114,6 +127,9 @@ $(document).ready(function () {
     }
   });
 
+  /**
+   * Funzione che permette di eliminare un anno scolastico.
+   */
   $("#years-table tbody").on("click", "button", function () {
     if (
       confirm(
@@ -129,6 +145,9 @@ $(document).ready(function () {
     }
   });
 
+  /**
+   * Funzione utilizzata per creare la tabella delle impostazioni.
+   */
   const createTable = () => {
     let table = $("#settings-table").DataTable({
       columnDefs: [
@@ -150,6 +169,9 @@ $(document).ready(function () {
 
   let table = createTable();
 
+  /**
+   * Funzione che permette di cambiare dinamicamente la grafica relativa alla riga di una impostazione.
+   */
   $("#settings-table .edit-button").on("click", function (event) {
     $(table.table().body()).unhighlight();
     let button = $(event.target);

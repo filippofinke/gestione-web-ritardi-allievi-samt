@@ -1,3 +1,6 @@
+/**
+ * Funzione utilizzata per creare la tabella degli utenti.
+ */
 const createTable = () => {
   var table = $("#users-table").DataTable({
     columnDefs: [
@@ -13,6 +16,7 @@ const createTable = () => {
     ],
   });
 
+  // Abilito l'highlighting del testo alla ricerca.
   table.on("draw", function () {
     var body = $(table.table().body());
 
@@ -25,6 +29,9 @@ const createTable = () => {
 $(document).ready(function () {
   var table = createTable();
 
+  /**
+   * Funzione che permette di eliminare un utente.
+   */
   $("#users-table tbody").on("click", "button", function () {
     if (confirm("Sei sicuro di volere eliminare questo utente?")) {
       let row = $(this).parents("tr")[0];
@@ -38,6 +45,9 @@ $(document).ready(function () {
     }
   });
 
+  /**
+   * Funzione che permette di aggiornare i permessi dinamicamente al click su una checkbox.
+   */
   $("#users-table tbody").on("click", 'input[type="checkbox"]', function () {
     let row = $(this).parents("tr")[0];
     let checkboxes = $(row).find('input[type="checkbox"]');
@@ -51,6 +61,9 @@ $(document).ready(function () {
     $.post("user/" + row.id, { permission });
   });
 
+  /**
+   * Funzione che permette di creare un utente.
+   */
   $("#new-user-form").on("submit", function (event) {
     event.preventDefault();
     $("#new-user-button")

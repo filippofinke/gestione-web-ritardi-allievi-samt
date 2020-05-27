@@ -165,6 +165,7 @@
         $(document).ready(function() {
             let currentRow = null;
 
+            // Creo la tabella dei ritardi.
             var delays_table = $('#view-student-table').DataTable({
                 "lengthMenu": [
                     [5, 10, 15],
@@ -177,6 +178,7 @@
                 }]
             });
 
+            // Creo la tabella degli studenti.
             var table = $('#students-table').DataTable({
                 "lengthMenu": [
                     [5, 10, 15],
@@ -189,18 +191,23 @@
                 }]
             });
 
+            // Abilito l'highlighting alla ricerca.
             delays_table.on('draw', function() {
                 var body = $(delays_table.table().body());
                 body.unhighlight();
                 body.highlight(delays_table.search());
             });
 
+            // Abilito l'highlighting alla ricerca.
             table.on('draw', function() {
                 var body = $(table.table().body());
                 body.unhighlight();
                 body.highlight(table.search());
             });
 
+            /**
+             * Funzione che permette di cambiare dinamicamente la grafica della riga di un ritardo.
+             */
             $('#view-student-table tbody').on('click', 'button', function(e) {
 
                 let row = $(this).parents('tr')[0];
@@ -228,6 +235,9 @@
                 }
             });
 
+            /**
+             * Funzione che permette di mostrare tutti i ritardi da recuperare di uno studente.
+             */
             $('#students-table tbody').on('click', '.view-button', async function() {
                 currentRow = $(this).parents('tr')[0];
                 let student_id = currentRow.id;
@@ -249,6 +259,9 @@
                 $("#view-student-modal").modal('show');
             });
 
+            /**
+             * Funzione che permette di richiamare il form di stampa del browser.
+             */
             $('#print-pdf').on('click', function() {
                 $('#iframe').get(0).contentWindow.print();
             });
