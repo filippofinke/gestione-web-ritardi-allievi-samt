@@ -25,8 +25,8 @@ CREATE TABLE user (
     permission INT NOT NULL
 );
 
+# Inserimento account di default con password: 123456
 INSERT INTO user VALUES("admin@samtrevano.ch", "Admin", "Account", "$2y$10$oW/jP8Jg0OQSR6aT7VGf8OCTcdG8eoqYxN/4PQDsYBj81K05jPFAm", 8);
-INSERT INTO user VALUES("filippo.finke@samtrevano.ch", "Filippo", "Finke", "$2y$10$oW/jP8Jg0OQSR6aT7VGf8OCTcdG8eoqYxN/4PQDsYBj81K05jPFAm", 8);
 
 # Creazione della tabella token che verrà utilizzata per
 # la gestione del recupero password.
@@ -45,7 +45,9 @@ CREATE TABLE setting (
     type VARCHAR(30) NOT NULL
 );
 
+# Inserimento impostazione di base per il numero massimo di ritardi.
 INSERT INTO setting VALUES("max_delays", "3", "number");
+# Inserimento impostazione di base per il mittente dei messaggi di posta elettronica.
 INSERT INTO setting VALUES("from_email", "no-reply@gestione-ritardi-cpt.ch", "email");
 
 # Creazione della tabella section che verrà utilizzata per
@@ -54,11 +56,6 @@ CREATE TABLE section (
     name VARCHAR(10) PRIMARY KEY,
     deleted TINYINT DEFAULT 0
 );
-
-INSERT INTO section VALUES("SAM I1AA", 0);
-INSERT INTO section VALUES("SAM I2AA", 0);
-INSERT INTO section VALUES("SAM I3AA", 0);
-INSERT INTO section VALUES("SAM I4AA", 0);
 
 # Creazione della tabella year che verrà utilizzata per
 # il salvataggio degli anni e dei semestri.
@@ -69,9 +66,6 @@ CREATE TABLE year (
 	start_second_semester DATE,
 	end_second_semester DATE
 );
-
-INSERT INTO year VALUES(null, "2019-09-01", "2020-01-25", "2020-01-26", "2020-06-29");
-INSERT INTO year VALUES(null, "2018-09-01", "2019-01-25", "2019-01-26", "2019-06-29");
 
 
 # Creazione della tabella student che verrà utilizzata per
@@ -87,9 +81,6 @@ CREATE TABLE student (
     FOREIGN KEY(year) REFERENCES year(id) ON DELETE CASCADE
 );
 
-INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I4AA", 1);
-INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I3AA", 2);
-
 # Creazione della tabella delay che verrà utilizzata per
 # il salvataggio dei ritardi degli studenti.
 CREATE TABLE delay (
@@ -102,7 +93,22 @@ CREATE TABLE delay (
     FOREIGN KEY(student) REFERENCES student(id) ON DELETE CASCADE
 );
 
+# Inserimento anni scolastici di prova.
+INSERT INTO year VALUES(null, "2019-09-01", "2020-01-25", "2020-01-26", "2020-06-29");
+INSERT INTO year VALUES(null, "2018-09-01", "2019-01-25", "2019-01-26", "2019-06-29");
+
+# Inserimento sezioni di prova.
+INSERT INTO section VALUES("SAM I4AA", 0);
+INSERT INTO section VALUES("SAM I3AA", 0);
+
+# Inserimento studenti di prova.
+INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I4AA", 1);
+INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I3AA", 2);
+INSERT INTO student VALUES(null, "pinco.pallino@samtrevano.ch", "Pinco", "Pallino", "SAM I3AA", 2);
+
+# Inserimento ritardi di prova.
 INSERT INTO delay VALUES (null, 1, "2020-05-20", "Causa sveglia", null, 0);
-INSERT INTO delay VALUES (null, 1, "2020-05-21", "Incidente BUS", null, 0);
+INSERT INTO delay VALUES (null, 1, "2020-05-21", "Ritardo bus", null, 0);
 INSERT INTO delay VALUES (null, 1, "2020-05-21", "Ritardo treni", null, 0);
 INSERT INTO delay VALUES (null, 2, "2018-12-01", "Ritardo bus", null, 0);
+INSERT INTO delay VALUES (null, 3, "2018-12-01", "Ritardo bus", null, 0);
