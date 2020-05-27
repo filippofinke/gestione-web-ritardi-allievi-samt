@@ -47,7 +47,7 @@ class StudentPDF extends PDF
             $subtitle = "Ritardi nel semestre: ";
         } else {
             // Ricavo lo storico.
-            
+
             $delays = Delays::getById($id);
             $to_recover = Delays::getToRecoverById($id);
             $year = Years::getYearById($student["year"]);
@@ -59,7 +59,7 @@ class StudentPDF extends PDF
         $this->Cell(
             $this->GetPageWidth() - 20,
             7,
-            "Ritardi di " . $student["name"] . " " . $student["last_name"] . $header
+            "Ritardi di " . iconv('UTF-8', 'windows-1252', $student["name"]) . " " . iconv('UTF-8', 'windows-1252', $student["last_name"]) . $header
         );
         $this->Ln(7);
         $this->SetFont('Arial', '', 15);
@@ -83,16 +83,18 @@ class StudentPDF extends PDF
         // Stampo i ritardi.
         foreach ($delays as $delay) {
 
-            $length = strlen($delay["observations"]);
+            foreach ($delay as $key => $value) {
+                $delay[$key] = iconv('UTF-8', 'windows-1252//IGNORE', $value);
+            }
 
-            // Creo l'altezza della cella dinamicamente.
-            $cellHeight = 7;
-            $cellHeight += $length > 87 ? 7 : 0;
-            $cellHeight += $length > 174 ? 7 : 0;
+            $width = $this->GetStringWidth($delay["observations"]);
+            // Calcolo altezza delle celle
+            $cellHeight = ceil($width / 202) * 7;
+            if ($cellHeight < 7) $cellHeight = 7;
 
-            $this->Cell(25, $cellHeight, $delay["date"], 1);
-            $this->Cell(25, $cellHeight, $delay["recovered"] ?? "No", 1);
-            $this->Cell(25, $cellHeight, ($delay["justified"]) ? "Si" : "No", 1);
+            $this->Cell(25, $cellHeight, $delay["date"], 1, 0, 'C');
+            $this->Cell(25, $cellHeight, $delay["recovered"] ?? "No", 1, 0, 'C');
+            $this->Cell(25, $cellHeight, ($delay["justified"]) ? "Si" : "No", 1, 0, 'C');
             $this->MultiCell(202, 7, $delay["observations"], 1);
         }
         $this->Output('I', $student["name"] . $student["last_name"] . ".pdf", true);

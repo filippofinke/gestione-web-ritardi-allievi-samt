@@ -46,6 +46,12 @@ class RecoveriesPDF extends PDF
         // Per ogni utente ne stampo i dati.
         foreach ($students as $student) {
 
+            foreach ($student as $key => $value) {
+                if (!is_array($value)) {
+                    $student[$key] = iconv('UTF-8', 'windows-1252//IGNORE', $value);
+                }
+            }
+
             $y = $this->GetY();
             $this->MultiCell(87, 7,  $student["email"], 1);
             // Calcolo l'altezza della cella.
@@ -53,9 +59,9 @@ class RecoveriesPDF extends PDF
             $this->SetY($y);
             $this->SetX(97);
             $this->Cell(100, $h, $student["name"] . " " . $student["last_name"], 1);
-            $this->Cell(30, $h, $student["section"], 1);
-            $this->Cell(30, $h, count($student["delays"]), 1);
-            $this->Cell(30, $h, count($student["to_recover"]), 1);
+            $this->Cell(30, $h, $student["section"], 1, 0, 'C');
+            $this->Cell(30, $h, count($student["delays"]), 1, 0, 'C');
+            $this->Cell(30, $h, count($student["to_recover"]), 1, 0, 'C');
             $this->Ln($h);
         }
         $this->Output('I', "Recuperi.pdf", true);
