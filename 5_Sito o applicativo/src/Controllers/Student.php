@@ -28,8 +28,8 @@ class Student
      */
     public static function insert(Request $req, Response $res)
     {
-        $name = $req->getParam('name');
-        $lastname = $req->getParam('lastname');
+        $name = trim($req->getParam('name'));
+        $lastname = trim($req->getParam('lastname'));
         $email = $req->getParam('email');
         $section = $req->getParam('section');
 
