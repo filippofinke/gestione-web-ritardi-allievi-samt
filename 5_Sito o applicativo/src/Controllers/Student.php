@@ -28,26 +28,35 @@ class Student
      */
     public static function insert(Request $req, Response $res)
     {
+        // Ricavo il nome.
         $name = trim($req->getParam('name'));
+        // Ricavo il cognome.
         $lastname = trim($req->getParam('lastname'));
+        // Ricavo l'email.
         $email = $req->getParam('email');
+        // Ricavo la sezione.
         $section = $req->getParam('section');
 
         try {
+            // Controllo la validità dell'email.
             if (!Validator::isValidEmail($email, 'samtrevano.ch')) {
                 throw new Exception("L'email deve terminare con @samtrevano.ch!");
             }
+            // Controllo la validità dei campi ed inserisco lo studente.
             if (
                 Validator::isValidName($name)
                 && Validator::isValidLastName($lastname)
-                && $section
+                && Validator::isValidSection($section)
                 && Students::insert($email, $name, $lastname, $section)
             ) {
+                // Ritorno una richiesta con stato 200 - Success e l'id dello studente.
                 return $res->withStatus(200)->withText(Database::getConnection()->lastInsertId());
             }
         } catch (Exception $e) {
+            // Ritorno una richiesta con stato 500 - Internal Server Error e un errore.
             return $res->withStatus(500)->withText($e->getMessage());
         }
+        // Ritorno una richiesta con stato 400 - Bad Request.
         return $res->withStatus(400);
     }
 
@@ -60,7 +69,9 @@ class Student
      */
     public static function pdf(Request $req, Response $res)
     {
+        // Ricavo l'id dello studente.
         $id = $req->getAttribute('id');
+        // Creo il PDF personale.
         $pdf = new StudentPDF($id);
     }
 
@@ -73,14 +84,19 @@ class Student
      */
     public static function delays(Request $req, Response $res)
     {
+        // Ricavo l'id dello studente.
         $id = $req->getAttribute('id');
+        // Ricavo la tipologia di ritardi da mostrare.
         $type = $req->getAttribute('type');
-        $delays = null;
+        $delays = [];
         if ($type == "recoveries") {
+            // Ricavo i ritardi da recuperare.
             $delays = Delays::getToRecoverById($id);
         } else {
+            // Ricavo tutti i ritardi.
             $delays = Delays::getById($id);
         }
+        // Ritorno una richiesta con stato 200 - Success con la lista dei ritardi.
         return $res->withStatus(200)->withJson($delays);
     }
 }
