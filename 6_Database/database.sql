@@ -92,23 +92,3 @@ CREATE TABLE delay (
     justified TINYINT NOT NULL,
     FOREIGN KEY(student) REFERENCES student(id) ON DELETE CASCADE
 );
-
-# Inserimento anni scolastici di prova.
-INSERT INTO year VALUES(null, "2019-09-01", "2020-01-25", "2020-01-26", "2020-06-29");
-INSERT INTO year VALUES(null, "2018-09-01", "2019-01-25", "2019-01-26", "2019-06-29");
-
-# Inserimento sezioni di prova.
-INSERT INTO section VALUES("SAM I4AA", 0);
-INSERT INTO section VALUES("SAM I3AA", 0);
-
-# Inserimento studenti di prova.
-INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I4AA", 1);
-INSERT INTO student VALUES(null, "filippo.finke@samtrevano.ch", "Filippo", "Finke", "SAM I3AA", 2);
-INSERT INTO student VALUES(null, "pinco.pallino@samtrevano.ch", "Pinco", "Pallino", "SAM I3AA", 2);
-
-# Inserimento ritardi di prova.
-INSERT INTO delay VALUES (null, 1, "2020-05-20", "Causa sveglia", null, 0);
-INSERT INTO delay VALUES (null, 1, "2020-05-21", "Ritardo bus", null, 0);
-INSERT INTO delay VALUES (null, 1, "2020-05-21", "Ritardo treni", null, 0);
-INSERT INTO delay VALUES (null, 2, "2018-12-01", "Ritardo bus", null, 0);
-INSERT INTO delay VALUES (null, 3, "2018-12-01", "Ritardo bus", null, 0);
